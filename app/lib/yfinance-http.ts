@@ -19,8 +19,8 @@ export async function yfinanceRequest<T>(payload: MarketRequest): Promise<T> {
     ? `https://${process.env.VERCEL_URL}/api/python_market`
     : undefined);
   if (!endpoint) throw new MarketServiceError("Set YFINANCE_API_URL in .env to the Python market endpoint.", 503);
-  const token = process.env.YFINANCE_API_TOKEN;
-  if (!token?.trim()) throw new MarketServiceError("Configure the server-only YFINANCE_API_TOKEN for Next.js and the Python service.", 503);
+  const token = process.env.YFINANCE_API_TOKEN?.trim();
+  if (!token) throw new MarketServiceError("Configure the server-only YFINANCE_API_TOKEN for Next.js and the Python service.", 503);
   const headers: Record<string, string> = { "content-type": "application/json", "accept-encoding": "gzip", authorization: `Bearer ${token}` };
   // Protected preview deployments also protect the Python function on the same deployment.
   if (!process.env.YFINANCE_API_URL && process.env.VERCEL_URL && process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
@@ -36,17 +36,18 @@ export async function yfinanceRequest<T>(payload: MarketRequest): Promise<T> {
     const timedOut = error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError");
     throw new MarketServiceError(timedOut ? "The Python market service timed out. Please try again." : "Cannot reach the Python market service. Locally, start it with npm run dev:backend.", timedOut ? 504 : 502);
   }
+  if (response.status === 401 || response.status === 403) {
+    const pythonRejectedToken = response.headers.get("www-authenticate")?.includes('realm="market-service"');
+    throw new MarketServiceError(pythonRejectedToken
+      ? "Python rejected the shared token. Check YFINANCE_API_TOKEN in this deployment's environment, leave YFINANCE_API_URL unset for a single Vercel project, and redeploy."
+      : `The Python endpoint request was blocked (HTTP ${response.status}). Check Vercel Deployment Protection / Protection Bypass for Automation, leave YFINANCE_API_URL unset for a single Vercel project, and redeploy.`);
+  }
   let data;
   try { data = await response.json(); }
   catch {
-    throw new MarketServiceError(response.status === 401 || response.status === 403
-      ? "The Python function is protected. Configure Vercel Protection Bypass for Automation and redeploy."
-      : "The Python market service returned an invalid JSON response.");
+    throw new MarketServiceError("The Python market service returned an invalid JSON response.");
   }
   if (!data || typeof data !== "object" || Array.isArray(data)) throw new MarketServiceError("The Python market service returned an invalid data response.");
-  if (response.status === 401 || response.status === 403) {
-    throw new MarketServiceError("Python service authentication failed. Check the server-side YFINANCE_API_TOKEN and deployment protection settings.");
-  }
   if (!response.ok || data?.error) {
     throw new MarketServiceError(typeof data?.error === "string" ? data.error : "Unable to load market data.", response.ok ? 502 : response.status);
   }

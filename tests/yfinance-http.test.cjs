@@ -78,6 +78,16 @@ test('missing server token disables the proxy before any network request', async
   assert.equal(calls, 0);
 });
 
+test('server token ignores surrounding environment whitespace', async () => {
+  let authorization;
+  const { client } = setup(async (_, options) => {
+    authorization = options.headers.authorization;
+    return Response.json({ points: [] });
+  }, { YFINANCE_API_URL: 'https://python.example/api/python_market', YFINANCE_API_TOKEN: `  ${TEST_TOKEN}\n` });
+  await client.yfinanceRequest({ action: 'rates' });
+  assert.equal(authorization, `Bearer ${TEST_TOKEN}`);
+});
+
 test('backend launcher loads the shared environment before spawning Python', () => {
   const code = fs.readFileSync('scripts/dev-backend.cjs', 'utf8');
   const env = {};
@@ -141,7 +151,9 @@ test('Python failures, malformed responses, protection and timeouts return usabl
   for (const [fetch, expectedStatus, message] of [
     [async () => Response.json({ error: 'Unknown ticker' }, { status: 422 }), 422, /Unknown ticker/],
     [async () => new Response('<html>Login</html>', { status: 401 }), 502, /Protection Bypass/],
-    [async () => Response.json({ error: 'Unauthorized.' }, { status: 401 }), 502, /Python service authentication failed/],
+    [async () => Response.json({ error: 'Unauthorized.' }, { status: 401, headers: { 'www-authenticate': 'Bearer realm="market-service"' } }), 502, /Python rejected the shared token/],
+    [async () => Response.json({ error: 'Forbidden' }, { status: 403 }), 502, /Protection Bypass/],
+    [async () => Response.json({ error: 'Unauthorized' }, { status: 401 }), 502, /Protection Bypass/],
     [async () => new Response('bad json'), 502, /invalid JSON/],
     [async () => Response.json(null), 502, /invalid data/],
     [async () => { throw new Error('Connection refused'); }, 502, /dev:backend/],

@@ -50,8 +50,8 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def authorized(self):
-        expected = os.environ.get("YFINANCE_API_TOKEN", "")
-        if not expected.strip():
+        expected = os.environ.get("YFINANCE_API_TOKEN", "").strip()
+        if not expected:
             self.send_json({"error": "Market service authentication is not configured."}, 503)
             return False
         scheme, separator, token = self.headers.get("Authorization", "").partition(" ")

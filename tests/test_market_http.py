@@ -76,6 +76,10 @@ class MarketHTTPTests(unittest.TestCase):
             self.assertEqual(request({"action": "rates"}, headers={"Authorization": f"bEaReR {TEST_TOKEN}"})[0], 200)
             rates.assert_called_once()
 
+    def test_environment_token_ignores_surrounding_whitespace(self):
+        with patch.dict(os.environ, {"YFINANCE_API_TOKEN": f"  {TEST_TOKEN}\n"}):
+            self.assertEqual(request(method="GET")[0], 200)
+
     def test_health_and_unknown_paths_do_not_fetch_yahoo(self):
         with patch.object(service, "dispatch") as dispatch:
             status, data, _ = request(method="GET")
