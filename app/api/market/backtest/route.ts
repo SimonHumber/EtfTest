@@ -1,22 +1,16 @@
-import { execFile } from "child_process";
-import { promisify } from "util";
-import { NextResponse } from "next/server";
-import path from "path";
-import { existsSync } from "fs";
+import { checkAppRequest } from "../../../lib/app-request";
+import { marketError, marketResponse, yfinanceRequest } from "../../../lib/yfinance-http";
 
 export const runtime = "nodejs";
-const execFileAsync = promisify(execFile);
+export const maxDuration = 120;
 
 export async function POST(request: Request) {
-  try {
-    const payload = await request.json();
-    const script = path.join(process.cwd(), "services", "yfinance_service.py");
-    const python = path.join(process.cwd(), ".venv", "bin", "python");
-    const { stdout } = await execFileAsync(existsSync(python) ? python : "python3", [script, JSON.stringify({ action: "backtest", ...payload })], { maxBuffer: 1024 * 1024 * 16, timeout: 120_000 });
-    const data = JSON.parse(stdout);
-    if (data.error) return NextResponse.json(data, { status: 422 });
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to calculate the backtest." }, { status: 502 });
-  }
+  const denied = checkAppRequest(request);
+  if (denied) return denied;
+  let payload;
+  try { payload = await request.json(); }
+  catch { return marketResponse({ error: "A valid JSON request body is required." }, request, 400); }
+  if (!payload || !Array.isArray(payload.portfolios)) return marketResponse({ error: "A portfolios list is required." }, request, 400);
+  try { return marketResponse(await yfinanceRequest({ action: "backtest", portfolios: payload.portfolios }), request); }
+  catch (error) { return marketError(error, request); }
 }

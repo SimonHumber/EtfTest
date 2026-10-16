@@ -24,7 +24,6 @@ export default function Home() {
           </nav>
           <div className="ml-auto flex items-center gap-2 text-sm">
             <button className="hidden items-center gap-2 rounded-md px-3 py-2 text-slate-500 hover:bg-slate-100 sm:flex"><CalendarDays size={16} />{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</button>
-            <button className="grid h-9 w-9 place-items-center rounded-full bg-[#dae9e1] text-xs font-bold text-[#22513a]" aria-label="Account menu">ST</button>
           </div>
         </div>
         <nav className="flex border-t border-slate-100 px-3 sm:hidden">
@@ -32,7 +31,8 @@ export default function Home() {
           <NavButton active={tab === "backtest"} onClick={() => setTab("backtest")} icon={<LineChart size={16} />} label="Backtest" />
         </nav>
       </header>
-      {tab === "research" ? <TickerView /> : <BacktestView />}
+      <div hidden={tab !== "research"}><TickerView /></div>
+      <div hidden={tab !== "backtest"}><BacktestView /></div>
     </main>
   );
 }

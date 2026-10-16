@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Small JSON-in/JSON-out bridge between the Next app and yfinance."""
+"""Market-data operations shared by the HTTP function and command-line bridge."""
 import json
 import sys
 from datetime import date, datetime
@@ -7,9 +7,8 @@ from datetime import date, datetime
 try:
     import pandas as pd
     import yfinance as yf
-except ImportError:
-    print(json.dumps({"error": "yfinance is not installed. Run: python3 -m pip install -r requirements.txt"}))
-    raise SystemExit(0)
+except ImportError as error:
+    raise RuntimeError("Python market dependencies are missing. Install requirements.txt.") from error
 
 
 def number(value):
@@ -60,6 +59,7 @@ def lookup(symbol):
         "change": change,
         "changePercent": (change / previous * 100) if previous else 0,
         "currency": info.get("currency", "USD"),
+        "quoteType": info.get("quoteType"),
         "exchange": info.get("fullExchangeName") or info.get("exchange", "-"),
         "sector": info.get("category") or info.get("sector"),
         "industry": info.get("industry") or ("Exchange Traded Fund" if info.get("quoteType") == "ETF" else None),
@@ -95,13 +95,13 @@ def history(symbol):
     prices = ticker.history(period="max", auto_adjust=True, actions=False)
     if prices.empty or "Close" not in prices:
         return {"error": f"No price history was found for {symbol}."}
-    close = prices["Close"].copy()
+    close = prices["Close"].dropna().copy()
     close.index = pd.to_datetime(close.index).tz_localize(None).normalize()
-    close = close[~close.index.duplicated(keep="last")]
+    close = close[~close.index.duplicated(keep="last")].sort_index()
     if len(close) < 2:
         return {"error": f"Not enough daily history is available for {symbol}."}
     base = close.iloc[0]
-    points = [{"date": index.strftime("%Y-%m-%d"), "return": round((value / base - 1) * 100, 4), "close": round(float(value), 4)} for index, value in close.items()]
+    points = [{"date": index.strftime("%Y-%m-%d"), "return": round((value / base - 1) * 100, 4), "close": float(value)} for index, value in close.items()]
 
     period_starts = {
         "3M": end - pd.DateOffset(months=3),
@@ -124,14 +124,25 @@ def history(symbol):
         if intraday_history.empty or "Close" not in intraday_history:
             continue
         intraday_history.index = pd.to_datetime(intraday_history.index).tz_localize(None)
-        for timestamp, value in intraday_history["Close"].items():
+        for timestamp, value in intraday_history["Close"].dropna().items():
             session = timestamp.strftime("%Y-%m-%d")
             if session not in session_bases:
                 prior = close.loc[close.index < pd.Timestamp(session)]
-                session_bases[session] = round(float(prior.iloc[-1] if len(prior) else value), 4)
-            intraday_points[interval].append({"date": timestamp.strftime("%Y-%m-%dT%H:%M:%S"), "close": round(float(value), 4)})
+                session_bases[session] = float(prior.iloc[-1] if len(prior) else value)
+            intraday_points[interval].append({"date": timestamp.strftime("%Y-%m-%dT%H:%M:%S"), "close": float(value)})
 
-    return {"symbol": symbol, "points": points, "performance": performance, "intradayPoints": intraday_points, "sessionBases": session_bases}
+    metadata = ticker.history_metadata or {}
+    return {"symbol": symbol, "points": points, "performance": performance, "intradayPoints": intraday_points, "sessionBases": session_bases, "currency": metadata.get("currency", "USD"), "quoteType": metadata.get("instrumentType")}
+
+
+def risk_free_rates():
+    prices = yf.Ticker("^IRX").history(period="max", interval="1d", auto_adjust=True, actions=False)
+    if prices.empty or "Close" not in prices:
+        return {"error": "Historical ^IRX financing rates are unavailable. Please try again."}
+    close = prices["Close"].dropna().copy()
+    close.index = pd.to_datetime(close.index).tz_localize(None).normalize()
+    close = close[~close.index.duplicated(keep="last")].sort_index()
+    return {"symbol": "^IRX", "points": [{"date": index.strftime("%Y-%m-%d"), "rate": float(value) / 100} for index, value in close.items()]}
 
 
 def add_months(value, months):
@@ -201,19 +212,43 @@ def backtest(payload):
     return {"priceHistory": rows, "intradayPriceHistory": intraday_rows, "symbols": symbols}
 
 
+class MarketRequestError(ValueError):
+    pass
+
+
+def dispatch(payload):
+    if not isinstance(payload, dict):
+        raise MarketRequestError("The request body must be a JSON object.")
+    action = payload.get("action")
+    if action in ("lookup", "history"):
+        symbol = payload.get("symbol")
+        if not isinstance(symbol, str) or not symbol.strip():
+            raise MarketRequestError("A ticker symbol is required.")
+        return (lookup if action == "lookup" else history)(symbol.strip().upper())
+    if action == "search":
+        query = payload.get("query", "")
+        if not isinstance(query, str):
+            raise MarketRequestError("Search query must be text.")
+        return search(query.strip()) if query.strip() else {"results": []}
+    if action == "backtest":
+        portfolios = payload.get("portfolios")
+        if not isinstance(portfolios, list) or not portfolios:
+            raise MarketRequestError("Add at least one portfolio.")
+        for portfolio in portfolios:
+            if not isinstance(portfolio, dict) or not isinstance(portfolio.get("holdings"), list):
+                raise MarketRequestError("Each portfolio must contain a holdings list.")
+            if any(not isinstance(holding, dict) or not isinstance(holding.get("symbol"), str) for holding in portfolio["holdings"]):
+                raise MarketRequestError("Each holding must contain a ticker symbol.")
+        return backtest({"portfolios": portfolios})
+    if action == "rates":
+        return risk_free_rates()
+    raise MarketRequestError("Unknown market-data action.")
+
+
 def main():
     try:
         payload = json.loads(sys.argv[1]) if len(sys.argv) > 1 else json.load(sys.stdin)
-        if payload.get("action") == "lookup":
-            result = lookup(payload.get("symbol", ""))
-        elif payload.get("action") == "search":
-            result = search(payload.get("query", ""))
-        elif payload.get("action") == "history":
-            result = history(payload.get("symbol", ""))
-        elif payload.get("action") == "backtest":
-            result = backtest(payload)
-        else:
-            result = {"error": "Unknown request."}
+        result = dispatch(payload)
     except Exception as error:
         result = {"error": str(error)}
     print(json.dumps(result, default=str))

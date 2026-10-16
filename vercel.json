@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "functions": {
+    "api/python_market.py": {
+      "maxDuration": 120,
+      "excludeFiles": "{.venv/**,node_modules/**,.next/**,.git/**,app/**,tests/**,**/__pycache__/**,**/*.pyc}"
+    }
+  }
+}

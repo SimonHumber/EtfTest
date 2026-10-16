@@ -3,31 +3,38 @@
 import { useEffect, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Building2, ExternalLink, LoaderCircle, Search, TrendingUp } from "lucide-react";
 import { ChartHover } from "./chart-hover";
+import { useMarketData } from "./market-data-provider";
+import { LeverageControl } from "./leverage-control";
+import { indexWarning, maximumDrawdown, quoteForSeries } from "../lib/leverage";
+import type { HistoryPoint, MarketHistory as History, Quote } from "../lib/market-types";
 
-type Quote = { symbol: string; name: string; price?: number; change?: number; changePercent?: number; currency: string; exchange: string; sector?: string; industry?: string; marketCap?: number; aum?: number | null; expenseRatio?: number | null; pe?: number; dividendYield?: number; fiftyTwoWeekHigh?: number; fiftyTwoWeekLow?: number; description?: string };
 type Suggestion = { symbol: string; name: string; type: string; exchange: string };
-type HistoryPoint = { date: string; return: number; close: number };
-type IntradayPoint = { date: string; close: number };
-type History = { symbol: string; points: HistoryPoint[]; performance: Record<string, number | null>; intradayPoints?: Partial<Record<"5m" | "30m", IntradayPoint[]>>; sessionBases?: Record<string, number> };
 type Range = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y" | "Max";
 const ranges: Range[] = ["1D", "5D", "1M", "6M", "YTD", "1Y", "3Y", "5Y", "10Y", "Max"];
 
 const initial: Quote = { symbol: "VOO", name: "Vanguard S&P 500 ETF", price: 618.71, change: 2.98, changePercent: 0.48, currency: "USD", exchange: "NYSE Arca", sector: "Large Blend", industry: "Exchange Traded Fund", marketCap: 759_000_000_000, pe: 25.05, dividendYield: 1.18, fiftyTwoWeekHigh: 626.44, fiftyTwoWeekLow: 442.8, description: "Seeks to track the performance of the S&P 500 Index, representing large-capitalization companies in the United States." };
 
 export function TickerView() {
+  const { series, loadSeries } = useMarketData();
   const [query, setQuery] = useState("");
-  const [quote, setQuote] = useState<Quote>(initial);
+  const [baseQuote, setQuote] = useState<Quote>(initial);
+  const [activeId, setActiveId] = useState("");
+  const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [error, setError] = useState("");
   const [range, setRange] = useState<Range>("1Y");
-  const [history, setHistory] = useState<History | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
+  const activeSeries = series[activeId];
+  const history = activeSeries?.history ?? null;
+  const quote = activeSeries ? quoteForSeries(activeSeries) : baseQuote;
+  const activate = (id: string) => {
+    setActiveId(id); setQuery(series[id]?.name ?? id); setSuggestions([]); setFocused(false); setHistoryError("");
+  };
   useEffect(() => {
     const text = query.trim();
-    if (!text) { setSuggestions([]); return; }
+    if (!text || !focused) { setSuggestions([]); return; }
     let stale = false;
     const timer = window.setTimeout(async () => {
       try {
@@ -37,70 +44,72 @@ export function TickerView() {
       } catch { if (!stale) setSuggestions([]); }
     }, 220);
     return () => { stale = true; window.clearTimeout(timer); };
-  }, [query]);
-  useEffect(() => {
-    if (!hasSearched) return;
-    const controller = new AbortController();
-    setHistoryLoading(true);
-    setHistoryError("");
-    fetch(`/api/market/history?symbol=${encodeURIComponent(quote.symbol)}`, { signal: controller.signal })
-      .then(async response => {
-        const payload = await response.json();
-        if (!response.ok || payload.error) throw new Error(payload.error || "Unable to load price history.");
-        setHistory(payload);
-      })
-      .catch(requestError => { if (requestError.name !== "AbortError") { setHistory(null); setHistoryError(requestError instanceof Error ? requestError.message : "Unable to load price history."); } })
-      .finally(() => { if (!controller.signal.aborted) setHistoryLoading(false); });
-    return () => controller.abort();
-  }, [quote.symbol, hasSearched]);
+  }, [query, focused]);
   const search = async (symbol = query) => {
     const requested = symbol.trim().toUpperCase();
     if (!requested) return;
+    const local = series[requested] ?? Object.values(series).find(item => item.name.toUpperCase() === requested);
+    if (local?.simulation || local?.quote) { activate(local.id); return; }
     setLoading(true);
     setError("");
     setSuggestions([]);
+    setFocused(false);
     try {
       const response = await fetch(`/api/market/lookup?symbol=${encodeURIComponent(requested)}`);
       const payload = await response.json();
       if (!response.ok || payload.error) throw new Error(payload.error || "No data was found for that ticker.");
       setQuote(payload);
       setQuery(payload.symbol || requested);
-      setHasSearched(true);
+      setActiveId("");
+      setHistoryLoading(true); setHistoryError("");
+      try {
+        const loaded = await loadSeries(requested, payload);
+        setActiveId(loaded.id);
+      } catch (err) { setHistoryError(err instanceof Error ? err.message : "Unable to load price history."); }
     } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Live data is unavailable. Check the yfinance service and try again."); }
-    finally { setLoading(false); }
+    finally { setLoading(false); setHistoryLoading(false); }
   };
   const change = hasNumber(quote.change) ? quote.change : 0;
   const changePercent = hasNumber(quote.changePercent) ? quote.changePercent : 0;
   const positive = change >= 0;
   const chartPoints = history ? pointsForRange(history, range) : [];
-  const returnRows = ranges.map(period => ({ period, ...(history && history.symbol === quote.symbol && !historyLoading && !historyError
-    ? returnsForRange(history, period) : { total: null, annualized: null }) }));
+  const returnRows = ranges.map(period => ({ period, ...(history && !historyLoading && !historyError
+    ? returnsForRange(history, period) : { total: null, annualized: null, drawdown: null }) }));
+  const localSuggestions = focused && query.trim() ? Object.values(series).filter(item => item.simulation && item.name.toUpperCase().includes(query.trim().toUpperCase())) : [];
+  const warning = indexWarning(activeSeries, series[activeSeries?.simulation?.underlyingId ?? ""]);
+  const displaySuggestions = [...localSuggestions.map(item => ({ symbol: item.id, name: item.name, type: "Simulation", exchange: "Local" })), ...suggestions];
   return <div className="mx-auto max-w-[1440px] px-4 py-7 sm:px-6 lg:px-8">
     <div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end">
       <div><p className="mb-1 text-sm font-semibold text-[#397a62]">Market research</p><h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Know what you own.</h1><p className="mt-2 text-sm text-slate-500">Explore company fundamentals, prices, and historical context.</p></div>
-      <form onSubmit={event => { event.preventDefault(); void search(); }} className="flex w-full max-w-md gap-2"><label className="relative block flex-1"><Search size={17} className="absolute left-3 top-3 text-slate-400" /><input value={query} onChange={e => setQuery(e.target.value.toUpperCase())} onBlur={() => window.setTimeout(() => setSuggestions([]), 120)} placeholder="Search symbol, e.g. VOO" autoComplete="off" className="h-11 w-full rounded-md border border-slate-300 bg-white pl-9 pr-10 text-sm outline-none ring-[#397a62] focus:ring-2" />{loading ? <LoaderCircle size={17} className="absolute right-3 top-3 animate-spin text-[#397a62]" aria-label="Searching" /> : suggestions.length > 0 && <span className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-lg">{suggestions.map(item => <button type="button" key={`${item.symbol}-${item.exchange}`} onMouseDown={event => event.preventDefault()} onClick={() => void search(item.symbol)} className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-[#edf5f0]"><span className="min-w-0"><span className="block text-sm font-bold text-slate-800">{item.symbol}</span><span className="block truncate text-xs text-slate-500">{item.name}</span></span><span className="shrink-0 text-right text-[11px] text-slate-400">{item.type}<br/>{item.exchange}</span></button>)}</span>}</label><button disabled={loading} className="rounded-md bg-[#15233c] px-4 text-sm font-semibold text-white hover:bg-[#22375c] disabled:opacity-70">Search</button></form>
+      <form onSubmit={event => { event.preventDefault(); void search(); }} className="flex w-full max-w-md gap-2"><label className="relative block flex-1"><Search size={17} className="absolute left-3 top-3 text-slate-400" /><input value={query} onChange={e => setQuery(e.target.value.toUpperCase())} onFocus={() => setFocused(true)} onBlur={() => { setFocused(false); setSuggestions([]); }} placeholder="Search symbol, e.g. VOO" autoComplete="off" className="h-11 w-full rounded-md border border-slate-300 bg-white pl-9 pr-10 text-sm outline-none ring-[#397a62] focus:ring-2" />{loading ? <LoaderCircle size={17} className="absolute right-3 top-3 animate-spin text-[#397a62]" aria-label="Searching" /> : displaySuggestions.length > 0 && <span className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-lg">{displaySuggestions.map(item => <button type="button" key={`${item.symbol}-${item.exchange}`} onMouseDown={event => event.preventDefault()} onClick={() => void search(item.symbol)} className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-[#edf5f0]"><span className="min-w-0"><span className="block text-sm font-bold text-slate-800">{series[item.symbol]?.name ?? item.symbol}</span><span className="block truncate text-xs text-slate-500">{item.name}</span></span><span className="shrink-0 text-right text-[11px] text-slate-400">{item.type}<br/>{item.exchange}</span></button>)}</span>}</label><button disabled={loading} className="rounded-md bg-[#15233c] px-4 text-sm font-semibold text-white hover:bg-[#22375c] disabled:opacity-70">Search</button></form>
     </div>
     {error && <div className="mb-5 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">{error}</div>}
     <section className="border border-slate-200 bg-white shadow-panel">
-      <div className="flex flex-col justify-between gap-4 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:p-7"><div className="flex gap-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#edf3ef] text-[#397a62]"><TrendingUp size={23} /></span><div><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><h2 className="text-xl font-bold text-slate-900">{quote.symbol}</h2><span className="text-sm text-slate-500">{quote.name}</span></div><p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-400">{quote.exchange} · {quote.currency}</p></div></div><div className="sm:text-right"><div className="text-2xl font-bold tabular-nums text-slate-900">{money(quote.price, quote.currency)}</div><div className={`mt-1 inline-flex items-center gap-1 text-sm font-semibold ${positive ? "text-[#17724a]" : "text-[#c44747]"}`}>{positive ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}{signed(change)} ({signed(changePercent)}%)</div></div></div>
+      <div className="flex flex-col justify-between gap-4 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:p-7"><div className="flex gap-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#edf3ef] text-[#397a62]"><TrendingUp size={23} /></span><div><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><h2 className="break-words text-xl font-bold text-slate-900">{quote.symbol}</h2><span className="text-sm text-slate-500">{quote.name}</span></div><p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-400">{quote.exchange} · {quote.currency}</p></div></div><div className="sm:text-right"><div className="text-2xl font-bold tabular-nums text-slate-900">{money(quote.price, quote.currency)}</div><div className={`mt-1 inline-flex items-center gap-1 text-sm font-semibold ${positive ? "text-[#17724a]" : "text-[#c44747]"}`}>{positive ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}{signed(change)} ({signed(changePercent)}%)</div></div></div>
       <div className="grid gap-px bg-slate-200 sm:grid-cols-2 lg:grid-cols-3">{[
         ["Market cap", compact(quote.marketCap)], ["AUM", compactMoney(quote.aum, quote.currency)], ["MER / Expense ratio", hasNumber(quote.expenseRatio) ? `${quote.expenseRatio.toFixed(2)}%` : "-"], ["P/E ratio", fixed(quote.pe)], ["Dividend yield", hasNumber(quote.dividendYield) ? `${quote.dividendYield.toFixed(2)}%` : "-"], ["52 week range", `${money(quote.fiftyTwoWeekLow, quote.currency)} - ${money(quote.fiftyTwoWeekHigh, quote.currency)}`]
       ].map(([label, value]) => <div className="bg-white p-5" key={label}><p className="text-xs font-medium uppercase tracking-wide text-slate-400">{label}</p><p className="mt-2 text-base font-semibold tabular-nums text-slate-800">{value}</p></div>)}</div>
     </section>
+    <div className="mt-5 grid items-start gap-4 lg:grid-cols-2">
+      <label className="min-w-0 text-xs font-medium text-slate-500">Loaded series<select aria-label="Research series" value={activeId} onChange={event => activate(event.target.value)} className="mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800"><option value="" disabled>Select a loaded ticker</option>{Object.values(series).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+      <LeverageControl sourceIds={activeId ? [activeId] : []} disabled={loading || historyLoading} onApplied={items => { setActiveId(items[0].id); setQuery(items[0].name); }}/>
+    </div>
+    {activeSeries?.simulation && warning && <p className="mt-3 text-xs text-amber-700">{warning}</p>}
+    {activeSeries?.simulation?.coverageWarning && <p className="mt-3 text-xs text-amber-700">{activeSeries.simulation.coverageWarning}</p>}
     <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
       <section className="border border-slate-200 bg-white p-5 shadow-panel sm:p-7"><div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><h2 className="font-semibold text-slate-900">Historical price</h2><p className="mt-1 text-sm text-slate-500">5-minute prices for 1D; 30-minute prices for 5D</p></div><div className="max-w-full overflow-x-auto"><div className="flex w-max rounded-md border border-slate-200 p-0.5">{ranges.map(option => <button key={option} onClick={() => setRange(option)} className={`h-7 shrink-0 rounded px-2.5 text-xs font-semibold ${range === option ? "bg-[#15233c] text-white" : "text-slate-500 hover:bg-slate-100"}`}>{option}</button>)}</div></div></div><MiniChart key={`${quote.symbol}-${range}`} points={chartPoints} range={range} currency={quote.currency} loading={historyLoading} error={historyError} /><div className="mt-5 border-t border-slate-100 pt-5">
         <h3 className="mb-3 text-sm font-semibold text-slate-800">Annualized returns</h3>
-        <table className="w-full table-fixed text-sm">
+        <div className="overflow-x-auto"><table className="w-full min-w-[440px] table-fixed text-sm">
           <thead className="border-b border-slate-200 text-xs text-slate-500">
-            <tr><th scope="col" className="w-1/5 pb-3 text-left font-medium">Range</th><th scope="col" className="pb-3 text-right font-medium">Total return</th><th scope="col" className="pb-3 pl-2 text-right font-medium" title="Compounded yearly equivalent using elapsed calendar days. Periods under one year are extrapolated.">Annualized return</th></tr>
+            <tr><th scope="col" className="w-1/5 pb-3 text-left font-medium">Range</th><th scope="col" className="pb-3 text-right font-medium">Total return</th><th scope="col" className="pb-3 pl-2 text-right font-medium" title="Compounded yearly equivalent using elapsed calendar days. Periods under one year are extrapolated.">Annualized return</th><th scope="col" className="pb-3 pl-2 text-right font-medium">Max drawdown</th></tr>
           </thead>
           <tbody className="divide-y divide-slate-100">{returnRows.map(row => <tr key={row.period}>
             <th scope="row" className="py-2.5 text-left font-medium text-slate-700">{row.period}</th>
-            {[row.total, row.annualized].map((value, index) => <td key={index} className={`break-words py-2.5 pl-2 text-right font-semibold tabular-nums ${!hasNumber(value) ? "text-slate-400" : value < 0 ? "text-rose-600" : "text-[#17724a]"}`}>{percent(value)}</td>)}
+            {[row.total, row.annualized, row.drawdown].map((value, index) => <td key={index} className={`break-words py-2.5 pl-2 text-right font-semibold tabular-nums ${!hasNumber(value) ? "text-slate-400" : value < 0 ? "text-rose-600" : "text-[#17724a]"}`}>{percent(value)}</td>)}
           </tr>)}</tbody>
-        </table>
+        </table></div>
       </div></section>
-      <section className="border border-slate-200 bg-white p-5 shadow-panel sm:p-7"><div className="mb-6 flex items-center gap-2"><Building2 size={18} className="text-[#397a62]" /><h2 className="font-semibold text-slate-900">Profile</h2></div><dl className="space-y-4 text-sm"><Data label="Category" value={quote.sector || "-"}/><Data label="Classification" value={quote.industry || "-"}/></dl><p className="mt-7 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-600">{quote.description || "No business summary is available for this symbol."}</p><a href={`https://finance.yahoo.com/quote/${encodeURIComponent(quote.symbol)}`} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#21674f] hover:underline">Open on Yahoo Finance <ExternalLink size={14}/></a></section>
+      <section className="border border-slate-200 bg-white p-5 shadow-panel sm:p-7"><div className="mb-6 flex items-center gap-2"><Building2 size={18} className="text-[#397a62]" /><h2 className="font-semibold text-slate-900">Profile</h2></div><dl className="space-y-4 text-sm"><Data label="Category" value={quote.sector || "-"}/><Data label="Classification" value={quote.industry || "-"}/></dl><p className="mt-7 border-t border-slate-100 pt-5 text-sm leading-6 text-slate-600">{quote.description || "No business summary is available for this symbol."}</p><a href={`https://finance.yahoo.com/quote/${encodeURIComponent(activeSeries?.simulation?.underlyingId ?? quote.symbol)}`} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#21674f] hover:underline">{activeSeries?.simulation ? "Underlying on Yahoo Finance" : "Open on Yahoo Finance"} <ExternalLink size={14}/></a></section>
     </div>
   </div>;
 }
@@ -155,8 +164,8 @@ function rangeStartDate(range: Range, end: string): string {
   }
   return start.toISOString().slice(0, 10);
 }
-function returnsForRange(history: History, range: Range): { total: number | null; annualized: number | null } {
-  const unavailable = { total: null, annualized: null };
+function returnsForRange(history: History, range: Range): { total: number | null; annualized: number | null; drawdown: number | null } {
+  const unavailable = { total: null, annualized: null, drawdown: null };
   let first: { date: string; close: number } | undefined;
   let last: { date: string; close: number } | undefined;
   if (range === "1D" || range === "5D") {
@@ -172,14 +181,16 @@ function returnsForRange(history: History, range: Range): { total: number | null
     const target = rangeStartDate(range, last.date);
     first = range === "Max" ? history.points[0] : history.points.findLast(point => range === "YTD" ? point.date < target : point.date <= target);
   }
-  if (!first || !last || !hasNumber(first.close) || !hasNumber(last.close) || first.close <= 0 || last.close <= 0) return unavailable;
+  if (!first || !last || !hasNumber(first.close) || !hasNumber(last.close) || first.close <= 0 || last.close < 0) return unavailable;
   const days = (Date.parse(`${last.date.slice(0, 10)}T00:00:00Z`) - Date.parse(`${first.date.slice(0, 10)}T00:00:00Z`)) / 86400000;
   if (days <= 0) return unavailable;
   const total = (last.close / first.close - 1) * 100;
   const annualized = Math.expm1(Math.log(last.close / first.close) * 365.25 / days) * 100;
-  return { total: Number.isFinite(total) ? total : null, annualized: Number.isFinite(annualized) ? annualized : null };
+  const path = range === "1D" || range === "5D" ? intradayPointsForRange(history, range) : history.points.filter(point => point.date >= first!.date && point.date <= last!.date);
+  const drawdown = maximumDrawdown([first, ...path]);
+  return { total: Number.isFinite(total) ? total : null, annualized: Number.isFinite(annualized) ? annualized : null, drawdown };
 }
-function rebasePoints(points: HistoryPoint[]) { if (points.length < 2) return points; const firstClose = points[0].close; return points.map(point => ({ ...point, return: (point.close / firstClose - 1) * 100 })); }
+function rebasePoints(points: HistoryPoint[]) { if (points.length < 2) return points; const firstClose = points[0].close; return points.map(point => ({ ...point, return: firstClose > 0 ? (point.close / firstClose - 1) * 100 : 0 })); }
 function intradayPointsForRange(history: History, range: Range): HistoryPoint[] {
   const source = history.intradayPoints?.[range === "1D" ? "5m" : "30m"] ?? [];
   if (!source.length) return [];
@@ -188,5 +199,5 @@ function intradayPointsForRange(history: History, range: Range): HistoryPoint[] 
   if (!selected.length) return [];
   const session = selected[0].date.slice(0, 10);
   const base = history.sessionBases?.[session] ?? selected[0].close;
-  return selected.map(point => ({ ...point, return: (point.close / base - 1) * 100 }));
+  return selected.map(point => ({ ...point, return: base > 0 ? (point.close / base - 1) * 100 : 0 }));
 }
