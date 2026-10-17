@@ -12,7 +12,7 @@ import type { TickerSelection } from "../lib/etf-directory";
 
 type Holding = { id: string; symbol: string; weight: number };
 type Portfolio = { id: string; name: string; color: string; holdings: Holding[]; leverage?: PortfolioLeverageConfig };
-type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; date: string; frequency?: "monthly" | "weekly" | "quarterly" };
+type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; date: string; startAtBeginning?: boolean; frequency?: "monthly" | "weekly" | "quarterly" | "annual" };
 type Result = { date: string; values: Record<string, number>; contributions: number };
 type PriceRow = { date: string; prices: Record<string, number> };
 type ChartRange = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y" | "Max";
@@ -27,7 +27,7 @@ export function BacktestView({ portfolioSelection }: { portfolioSelection?: Tick
   ]);
   const [flows, setFlows] = useState<CashFlow[]>([
     { id: "initial", type: "initial", amount: 10000, date: "2022-01-03" },
-    { id: "monthly", type: "recurring", amount: 0, date: "2022-02-01", frequency: "monthly" },
+    { id: "monthly", type: "recurring", amount: 0, date: "", startAtBeginning: true, frequency: "monthly" },
   ]);
   const [flowAmountDrafts, setFlowAmountDrafts] = useState<Record<string, string>>({});
   const [start, setStart] = useState("");
@@ -131,7 +131,7 @@ export function BacktestView({ portfolioSelection }: { portfolioSelection?: Tick
   return <div className="mx-auto max-w-[1440px] px-4 py-7 sm:px-6 lg:px-8">
     <div className="mb-7 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
       <div><p className="mb-1 text-sm font-semibold text-[#397a62]">Portfolio lab</p><h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Compare your investing ideas.</h1><p className="mt-2 text-sm text-slate-500">Model holdings, deposits, and historical performance in one place.</p></div>
-      <div className="flex flex-wrap items-center gap-2"><DateInput value={start} onChange={setStart}/><span className="text-slate-400">to</span><DateInput value={end} onChange={setEnd}/><button onClick={() => void run()} disabled={loading} className="inline-flex h-10 items-center gap-2 rounded-md bg-[#15233c] px-4 text-sm font-semibold text-white hover:bg-[#22375c] disabled:opacity-70"><Play size={15} fill="currentColor"/>{loading ? "Running..." : "Run backtest"}</button></div>
+      <div className="flex flex-wrap items-center gap-2"><DateInput value={start} onChange={setStart}/><span className="text-slate-400">to</span><DateInput value={end} onChange={setEnd}/><button onClick={() => void run()} disabled={loading} className="mx-auto inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#15233c] px-4 text-sm font-semibold text-white hover:bg-[#22375c] disabled:opacity-70 sm:mx-0 sm:h-10 sm:w-auto"><Play size={15} fill="currentColor"/>{loading ? "Running..." : "Run backtest"}</button></div>
     </div>
     {error && <div className="mb-5 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">{error}</div>}
     <div className="grid items-start gap-6 xl:grid-cols-[410px_minmax(0,1fr)]">
@@ -144,8 +144,34 @@ export function BacktestView({ portfolioSelection }: { portfolioSelection?: Tick
           </div>)}</div>
         </section>
         <section className="border border-slate-200 bg-white shadow-panel"><div className="flex items-center justify-between border-b border-slate-200 px-5 py-4"><div><h2 className="font-semibold text-slate-900">Cash flows</h2><p className="mt-0.5 text-xs text-slate-500">Applied to every portfolio</p></div><button onClick={() => setFlows(items => [...items, { id: crypto.randomUUID(), type: "one-time", amount: 1000, date: start }])} title="Add cash flow" aria-label="Add cash flow" className="grid h-8 w-8 place-items-center rounded-md text-[#21674f] hover:bg-[#edf5f0]"><CirclePlus size={20}/></button></div>
-          <div className="divide-y divide-slate-100">{flows.map(flow => <div key={flow.id} className="p-4"><div className="grid grid-cols-[minmax(0,1fr)_96px_26px] gap-2"><select value={flow.type} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, type: e.target.value as CashFlow["type"] } : f))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700"><option value="initial">Starting balance</option><option value="recurring">Recurring</option><option value="one-time">One-time</option></select><label className="relative"><span className="absolute left-2 top-2 text-xs text-slate-400">$</span><input type="number" min="0" value={flowAmountDrafts[flow.id] ?? String(flow.amount)} onChange={e => setFlowAmountDrafts(items => ({ ...items, [flow.id]: e.target.value }))} onBlur={() => commitFlowAmount(flow)} className="h-8 w-full rounded border border-slate-200 pl-5 pr-1 text-right text-xs outline-none focus:border-[#397a62]"/></label><button onClick={() => setFlows(items => items.filter(f => f.id !== flow.id))} className="text-slate-300 hover:text-rose-500"><Trash2 size={15}/></button></div><div className="mt-2 grid grid-cols-2 gap-2">{flow.type === "initial" ? <span className="flex h-8 items-center text-xs text-slate-400">At beginning of date range</span> : <input type="date" value={flow.date} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, date: e.target.value } : f))} className="h-8 min-w-0 rounded border border-slate-200 px-2 text-xs text-slate-600"/>}{flow.type === "recurring" ? <select value={flow.frequency} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, frequency: e.target.value as CashFlow["frequency"] } : f))} className="h-8 rounded border border-slate-200 bg-white px-2 text-xs text-slate-600"><option value="monthly">Monthly</option><option value="weekly">Weekly</option><option value="quarterly">Quarterly</option></select> : <span/>}</div></div>)}</div>
+          <div className="divide-y divide-slate-100">{flows.map(flow => <div key={flow.id} className="min-w-0 p-4">
+            <div className="grid grid-cols-[minmax(0,1fr)_96px_26px] gap-2">
+              <select value={flow.type} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, type: e.target.value as CashFlow["type"] } : f))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700"><option value="initial">Starting balance</option><option value="recurring">Recurring</option><option value="one-time">One-time</option></select>
+              <label className="relative"><span className="absolute left-2 top-2 text-xs text-slate-400">$</span><input type="number" min="0" value={flowAmountDrafts[flow.id] ?? String(flow.amount)} onChange={e => setFlowAmountDrafts(items => ({ ...items, [flow.id]: e.target.value }))} onBlur={() => commitFlowAmount(flow)} className="h-8 w-full rounded border border-slate-200 pl-5 pr-1 text-right text-xs outline-none focus:border-[#397a62]"/></label>
+              <button onClick={() => setFlows(items => items.filter(f => f.id !== flow.id))} className="text-slate-300 hover:text-rose-500"><Trash2 size={15}/></button>
+            </div>
+            {flow.type === "recurring" && <label className="mt-3 flex items-start gap-2 text-xs leading-5 text-slate-600">
+              <input type="checkbox" checked={flow.startAtBeginning !== false} onChange={event => {
+                const checked = event.target.checked;
+                setFlows(items => items.map(item => item.id === flow.id ? {
+                  ...item, startAtBeginning: checked,
+                  date: item.date || recurringStartDate(start, priceHistory?.[0]?.date),
+                } : item));
+              }} className="mt-1 h-3.5 w-3.5 shrink-0 accent-[#21674f]"/>
+              <span>Start at beginning of backtest</span>
+            </label>}
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              {flow.type === "initial" ? <span className="flex h-8 items-center text-xs text-slate-400">At beginning of date range</span> : <input type="date"
+                aria-label={flow.type === "recurring" ? "Recurring contribution start date" : "Contribution date"}
+                value={flow.type === "recurring" && flow.startAtBeginning !== false ? recurringStartDate(start, priceHistory?.[0]?.date) : flow.date}
+                disabled={flow.type === "recurring" && flow.startAtBeginning !== false}
+                onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, date: e.target.value } : f))}
+                className="h-8 min-w-0 w-full rounded border border-slate-200 px-2 text-xs text-slate-600 disabled:bg-slate-50 disabled:text-slate-400"/>}
+              {flow.type === "recurring" ? <select value={flow.frequency} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, frequency: e.target.value as CashFlow["frequency"] } : f))} className="h-8 min-w-0 w-full rounded border border-slate-200 bg-white px-2 text-xs text-slate-600"><option value="monthly">Monthly</option><option value="weekly">Weekly</option><option value="quarterly">Quarterly</option><option value="annual">Annually</option></select> : <span/>}
+            </div>
+          </div>)}</div>
         </section>
+        <button type="button" onClick={() => void run()} disabled={loading} className="mx-auto flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#15233c] px-4 text-sm font-semibold text-white hover:bg-[#22375c] disabled:opacity-70 sm:hidden"><Play size={15} fill="currentColor"/>{loading ? "Running..." : "Run backtest"}</button>
       </aside>
       <section className="min-w-0 border border-slate-200 bg-white shadow-panel"><div className="flex flex-col justify-between gap-4 border-b border-slate-200 p-5 sm:p-6"><div><h2 className="font-semibold text-slate-900">Growth of $10,000</h2><p className="mt-1 text-sm text-slate-500">Includes every modeled cash flow</p></div><div className="flex flex-wrap items-center gap-2"><div className="flex max-w-full overflow-x-auto rounded-md border border-slate-200 p-0.5">{chartRanges.map(option => <button key={option} onClick={() => setChartRange(option)} className={`h-7 shrink-0 rounded px-2 text-xs font-semibold ${chartRange === option ? "bg-[#15233c] text-white" : "text-slate-500 hover:bg-slate-100"}`}>{option}</button>)}</div><button onClick={exportResults} className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Download size={15}/> Export</button></div></div>
         {priceHistory ? <PerformanceChart key={chartRange} portfolios={displayPortfolios} results={visibleResults} range={chartRange}/> : <div className="grid min-h-[300px] place-items-center px-5 text-center text-sm text-slate-500">Run backtest to load daily adjusted prices. Cash flows and date ranges will recalculate instantly from that data.</div>}
@@ -226,16 +252,21 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
       addContribution(effectiveStart, amount);
       continue;
     }
-    if (!flow.date) continue;
     if (flow.type !== "recurring") {
-      addContribution(flow.date, amount);
+      if (flow.date) addContribution(flow.date, amount);
       continue;
     }
-    let date = parseLocalDate(flow.date);
+    const recurringStart = flow.startAtBeginning !== false ? recurringStartDate(start, priceHistory[0].date) : flow.date;
+    if (!recurringStart) continue;
+    const firstDate = parseLocalDate(recurringStart);
+    let date = new Date(firstDate);
+    let occurrence = 0;
     const last = parseLocalDate(lastDate);
     while (date <= last) {
       addContribution(formatDate(date), amount);
+      occurrence += 1;
       if (flow.frequency === "weekly") date.setDate(date.getDate() + 7);
+      else if (flow.frequency === "annual") date = addMonths(firstDate, occurrence * 12);
       else date = addMonths(date, flow.frequency === "quarterly" ? 3 : 1);
     }
   }
@@ -264,6 +295,7 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
   }
   return rows;
 }
+function recurringStartDate(start: string, firstPriceDate?: string) { return firstPriceDate && (!start || start < firstPriceDate) ? firstPriceDate : start; }
 function parseLocalDate(value: string) { const [year, month, day] = value.split("-").map(Number); return new Date(year, month - 1, day); }
 function formatDate(value: Date) { return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}`; }
 function addMonths(value: Date, count: number) { const day = value.getDate(); const month = value.getMonth() + count; const next = new Date(value.getFullYear(), month, 1); const maxDay = new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate(); next.setDate(Math.min(day, maxDay)); return next; }

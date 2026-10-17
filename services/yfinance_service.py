@@ -2,6 +2,7 @@
 """Market-data operations shared by the HTTP function and command-line bridge."""
 import json
 import sys
+from calendar import monthrange
 from datetime import date, datetime
 
 try:
@@ -163,6 +164,9 @@ def scheduled_dates(flow, last_date):
             current = current + pd.Timedelta(days=7)
         elif frequency == "quarterly":
             current = add_months(current, 3)
+        elif frequency == "annual":
+            year = start.year + len(dates)
+            current = date(year, start.month, min(start.day, monthrange(year, start.month)[1]))
         else:
             current = add_months(current, 1)
     return dates

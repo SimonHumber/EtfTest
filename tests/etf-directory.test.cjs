@@ -253,6 +253,68 @@ test('Research selection loads the exact Yahoo symbol only on action and ignores
   assert.equal(requests.length, 2, 'loaded Research quotes are reused');
 });
 
+test('recurring start checkbox defaults on, follows the range, and preserves custom dates without fetching', () => {
+  const h = hooks();
+  const { BacktestView } = load('app/ui/backtest-view.tsx', {
+    react: h.react,
+    './market-data-provider': { useMarketData: () => ({ series: {}, loadSeries() { throw new Error('Unexpected price request'); }, getRiskFreeRates() { throw new Error('Unexpected rate request'); } }) },
+  });
+  const render = () => h.render(() => BacktestView());
+  const checkbox = () => elements(render(), el => el.type === 'input' && el.props.type === 'checkbox')[0];
+  const date = () => elements(render(), el => el.props?.['aria-label'] === 'Recurring contribution start date')[0];
+  const start = () => elements(render(), el => el.type?.name === 'DateInput')[0];
+  assert.equal(checkbox().props.checked, true);
+  assert.equal(date().props.disabled, true);
+  start().props.onChange('2024-01-02');
+  assert.equal(date().props.value, '2024-01-02');
+  checkbox().props.onChange({ target: { checked: false } });
+  assert.equal(date().props.disabled, false);
+  assert.equal(date().props.value, '2024-01-02');
+  date().props.onChange({ target: { value: '2024-02-03' } });
+  checkbox().props.onChange({ target: { checked: true } });
+  start().props.onChange('2024-03-04');
+  assert.equal(date().props.value, '2024-03-04');
+  checkbox().props.onChange({ target: { checked: false } });
+  assert.equal(date().props.value, '2024-02-03');
+  elements(render(), el => el.props?.['aria-label'] === 'Add cash flow')[0].props.onClick();
+  elements(render(), el => el.type === 'select' && el.props.value === 'one-time')[0].props.onChange({ target: { value: 'recurring' } });
+  const checkboxes = elements(render(), el => el.type === 'input' && el.props.type === 'checkbox');
+  assert.equal(checkboxes.length, 2);
+  assert.equal(checkboxes[1].props.checked, true, 'newly converted recurring contributions default to range start');
+});
+
+test('mobile Run backtest button sits below cash flows and shares the top button loading and calculation', async () => {
+  const h = hooks();
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  const loaded = [];
+  const { BacktestView } = load('app/ui/backtest-view.tsx', {
+    react: h.react,
+    './market-data-provider': { useMarketData: () => ({ series: {}, loadSeries: async symbol => {
+      loaded.push(symbol);
+      await gate;
+      return { id: symbol, name: symbol, currency: 'USD', history: { symbol, points: [{ date: '2024-01-01', close: 100, return: 0 }, { date: '2024-01-02', close: 110, return: .1 }], performance: {} } };
+    }, getRiskFreeRates() { throw new Error('Unexpected rates request'); } }) },
+  });
+  const render = () => h.render(() => BacktestView());
+  const runButtons = () => elements(render(), el => el.type === 'button' && el.props.children?.some?.(value => value === 'Run backtest' || value === 'Running...'));
+  assert.equal(runButtons().length, 2);
+  assert.ok(runButtons()[0].props.className.includes('w-full'));
+  assert.ok(runButtons()[0].props.className.includes('sm:w-auto'));
+  assert.ok(runButtons()[1].props.className.includes('sm:hidden'));
+  const aside = elements(render(), el => el.type === 'aside')[0];
+  assert.equal(aside.props.children.at(-1).type, 'button');
+  assert.equal(aside.props.children.at(-2).type, 'section');
+  runButtons()[1].props.onClick();
+  assert.ok(runButtons().every(button => button.props.disabled));
+  assert.ok(runButtons().every(button => button.props.children.includes('Running...')));
+  release();
+  await new Promise(setImmediate);
+  assert.ok(runButtons().every(button => !button.props.disabled));
+  assert.deepEqual(loaded.sort(), ['BND', 'VOO', 'VTI', 'VXUS']);
+  assert.equal(elements(render(), el => el.type?.name === 'PerformanceChart').length, 1);
+});
+
 test('Research omits leverage controls and contains its table and Profile within shrinkable grid tracks', () => {
   const React = require('react');
   const { renderToStaticMarkup } = require('react-dom/server');
