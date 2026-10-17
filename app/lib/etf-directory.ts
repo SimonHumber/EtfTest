@@ -8,7 +8,7 @@ export type EtfRecord = {
 };
 export type EtfListing = EtfRecord & { market: "Canada" | "U.S."; id: string; symbol: string | null };
 export type EtfSortKey = "ticker" | "name" | "market" | "aum" | "mer" | "inceptionDate";
-export type TickerSelection = { id: string; symbol: string };
+export type TickerSelection = { id: string; symbol: string; ticker?: string };
 
 export function directoryListings(canada: EtfRecord[], usa: EtfRecord[]): EtfListing[] {
   return [

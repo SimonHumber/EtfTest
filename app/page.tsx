@@ -26,8 +26,8 @@ function Workspace() {
     setResearchSelection({ id: crypto.randomUUID(), symbol });
     setTab("research");
   };
-  const backtestEtf = (symbol: string) => {
-    setPortfolioSelection({ id: crypto.randomUUID(), symbol });
+  const backtestEtf = (symbol: string, ticker = symbol) => {
+    setPortfolioSelection({ id: crypto.randomUUID(), symbol, ticker });
     setTab("backtest");
   };
 

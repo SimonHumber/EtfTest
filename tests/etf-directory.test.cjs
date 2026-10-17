@@ -112,7 +112,7 @@ test('ETF table searches, filters, paginates, and dispatches both row actions', 
   const h = hooks();
   const research = [], backtest = [];
   const { EtfDirectoryView } = load('app/ui/etf-directory-view.tsx', { react: h.react });
-  const render = () => h.render(() => EtfDirectoryView({ onResearch: value => research.push(value), onBacktest: value => backtest.push(value) }));
+  const render = () => h.render(() => EtfDirectoryView({ onResearch: value => research.push(value), onBacktest: (symbol, ticker) => backtest.push({ symbol, ticker }) }));
   const byLabel = label => elements(render(), el => el.props?.['aria-label'] === label)[0];
   assert.equal(elements(render(), el => el.type === 'tbody')[0].props.children.length, 25);
   byLabel('Next ETF page').props.onClick();
@@ -122,7 +122,7 @@ test('ETF table searches, filters, paginates, and dispatches both row actions', 
   byLabel('Research CWO (Canada)').props.onClick();
   byLabel('Add CWO (Canada) to Backtest').props.onClick();
   assert.deepEqual(research, ['CWO.NE']);
-  assert.deepEqual(backtest, ['CWO.NE']);
+  assert.deepEqual(backtest, [{ symbol: 'CWO.NE', ticker: 'CWO' }]);
   elements(render(), el => el.type === 'button' && el.props.children === 'U.S.')[0].props.onClick();
   assert.equal(elements(render(), el => el.props?.role === 'status' && el.props.children === 'No ETFs found.').length, 1);
   byLabel('Clear ETF search').props.onClick();
@@ -173,9 +173,10 @@ test('workspace opens ETF actions in the correct tab and preserves both mounted 
   assert.equal(pushes.at(-1), '/?view=research');
   assert.equal(props(TickerView).selection.symbol, 'CWO.NE');
   assert.equal(visible(), 0);
-  props(EtfDirectoryView).onBacktest('IVV');
+  props(EtfDirectoryView).onBacktest('CWO.NE', 'CWO');
   assert.equal(pushes.at(-1), '/?view=backtest');
-  assert.equal(props(BacktestView).portfolioSelection.symbol, 'IVV');
+  assert.equal(props(BacktestView).portfolioSelection.symbol, 'CWO.NE');
+  assert.equal(props(BacktestView).portfolioSelection.ticker, 'CWO');
   assert.equal(visible(), 1);
   const first = props(BacktestView).portfolioSelection.id;
   props(EtfDirectoryView).onBacktest('IVV');
@@ -207,14 +208,14 @@ test('adding an ETF appends one 100% portfolio without fetching or touching last
   await new Promise(setImmediate);
   const before = chart();
   const calls = loadedIds.length;
-  selection = { id: 'from-etfs', symbol: 'CWO.NE' };
+  selection = { id: 'from-etfs', symbol: 'CWO.NE', ticker: 'CWO' };
   const tree = render();
   const holdings = elements(tree, el => el.type === BacktestTickerInput);
   assert.equal(holdings.length, 5);
   assert.equal(holdings.at(-1).props.value, 'CWO.NE');
   const weights = elements(tree, el => el.type === 'input' && el.props.type === 'number' && el.props.max === '100');
   assert.equal(weights.at(-1).props.value, 100);
-  assert.equal(elements(tree, el => el.props?.['aria-label'] === 'Portfolio name').at(-1).props.value, 'Portfolio');
+  assert.equal(elements(tree, el => el.props?.['aria-label'] === 'Portfolio name').at(-1).props.value, 'CWO');
   assert.equal(loadedIds.length, calls);
   assert.equal(chart().results, before.results);
   assert.equal(chart().portfolios.length, 2, 'new editor portfolio is not included until Run backtest');
@@ -250,4 +251,21 @@ test('Research selection loads the exact Yahoo symbol only on action and ignores
   assert.deepEqual(historyIds, ['IVV']);
   selection = { id: 'again', symbol: 'IVV' }; render();
   assert.equal(requests.length, 2, 'loaded Research quotes are reused');
+});
+
+test('Research omits leverage controls and contains its table and Profile within shrinkable grid tracks', () => {
+  const React = require('react');
+  const { renderToStaticMarkup } = require('react-dom/server');
+  const { TickerView } = load('app/ui/ticker-view.tsx', {
+    './market-data-provider': { useMarketData: () => ({ series: {}, loadSeries() { throw new Error('Unexpected fetch'); } }) },
+  });
+  const html = renderToStaticMarkup(React.createElement(TickerView));
+  assert.ok(!html.includes('Apply leverage'));
+  assert.ok(!html.includes('Apply Leverage'));
+  assert.ok(!html.includes('Financing spread'));
+  assert.ok(html.includes('grid-cols-1'));
+  assert.ok(html.includes('lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]'));
+  assert.ok(html.includes('aria-label="Research returns table"'));
+  assert.ok(html.includes('min-w-0 w-full max-w-full overflow-x-auto'));
+  assert.ok(html.includes('[overflow-wrap:anywhere]'));
 });

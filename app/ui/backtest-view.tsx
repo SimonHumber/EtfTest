@@ -48,7 +48,7 @@ export function BacktestView({ portfolioSelection }: { portfolioSelection?: Tick
     const { id, symbol } = portfolioSelection;
     // Append to the editor only. The last-run portfolios and chart stay untouched.
     setPortfolios(items => items.some(item => item.id === id) ? items : [...items, {
-      id, name: "Portfolio", color: colors[items.length % colors.length],
+      id, name: portfolioSelection.ticker || symbol, color: colors[items.length % colors.length],
       holdings: [{ id: `${id}-holding`, symbol, weight: 100 }],
     }]);
   }, [portfolioSelection]);
