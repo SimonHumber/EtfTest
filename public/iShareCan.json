@@ -1,0 +1,978 @@
+[
+  {
+    "ticker": "XMV",
+    "yahooSymbol": "XMV.TO",
+    "name": "iShares MSCI Min Vol Canada Index ETF",
+    "aum": 372758016.0,
+    "mer": 0.34,
+    "inceptionDate": "2012-07-24"
+  },
+  {
+    "ticker": "XMI",
+    "yahooSymbol": "XMI.TO",
+    "name": "iShares MSCI Min Vol EAFE Index ETF",
+    "aum": 179477648.0,
+    "mer": 0.37,
+    "inceptionDate": "2012-07-24"
+  },
+  {
+    "ticker": "XML",
+    "yahooSymbol": "XML.TO",
+    "name": "iShares MSCI Min Vol EAFE Index ETF (CAD-Hedged)",
+    "aum": 51150496.0,
+    "mer": 0.37,
+    "inceptionDate": "2016-04-05"
+  },
+  {
+    "ticker": "XIN",
+    "yahooSymbol": "XIN.TO",
+    "name": "iShares MSCI EAFE Index ETF (CAD-Hedged)",
+    "aum": 1909547520.0,
+    "mer": 0.48,
+    "inceptionDate": "2001-09-06"
+  },
+  {
+    "ticker": "GCNS",
+    "yahooSymbol": "GCNS.TO",
+    "name": "iShares ESG Conservative Balanced ETF Portfolio",
+    "aum": 89789968.0,
+    "mer": 0.23,
+    "inceptionDate": "2020-09-02"
+  },
+  {
+    "ticker": "XMS",
+    "yahooSymbol": "XMS.TO",
+    "name": "iShares MSCI Min Vol USA Index ETF (CAD-Hedged)",
+    "aum": 64608536.0,
+    "mer": 0.33,
+    "inceptionDate": "2016-04-05"
+  },
+  {
+    "ticker": "XTOH",
+    "yahooSymbol": "XTOH.TO",
+    "name": "iShares Core S&P Total U.S. Stock Market Index ETF (CAD-Hedged)",
+    "aum": 1481212.0,
+    "mer": null,
+    "inceptionDate": "2025-06-23"
+  },
+  {
+    "ticker": "XMY",
+    "yahooSymbol": "XMY.TO",
+    "name": "iShares MSCI Min Vol Global Index ETF (CAD-Hedged)",
+    "aum": 20313420.0,
+    "mer": 0.47,
+    "inceptionDate": "2016-04-05"
+  },
+  {
+    "ticker": "XEM",
+    "yahooSymbol": "XEM.TO",
+    "name": "iShares MSCI Emerging Markets Index ETF",
+    "aum": 516897120.0,
+    "mer": 0.83,
+    "inceptionDate": "2009-06-18"
+  },
+  {
+    "ticker": "GGRO",
+    "yahooSymbol": "GGRO.TO",
+    "name": "iShares ESG Growth ETF Portfolio",
+    "aum": 279222048.0,
+    "mer": 0.24,
+    "inceptionDate": "2020-09-02"
+  },
+  {
+    "ticker": "GEQT",
+    "yahooSymbol": "GEQT.TO",
+    "name": "iShares ESG Equity ETF Portfolio",
+    "aum": 312651136.0,
+    "mer": 0.25,
+    "inceptionDate": "2020-09-02"
+  },
+  {
+    "ticker": "XMM",
+    "yahooSymbol": "XMM.TO",
+    "name": "iShares MSCI Min Vol Emerging Markets Index ETF",
+    "aum": 119802936.0,
+    "mer": 0.42,
+    "inceptionDate": "2012-07-24"
+  },
+  {
+    "ticker": "GBAL",
+    "yahooSymbol": "GBAL.TO",
+    "name": "iShares ESG Balanced ETF Portfolio",
+    "aum": 295838304.0,
+    "mer": 0.24,
+    "inceptionDate": "2020-09-02"
+  },
+  {
+    "ticker": "XEC",
+    "yahooSymbol": "XEC.TO",
+    "name": "iShares Core MSCI Emerging Markets IMI Index ETF",
+    "aum": 109682.13,
+    "mer": 0.28,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XUS",
+    "yahooSymbol": "XUS.TO",
+    "name": "iShares Core S&P 500 Index ETF",
+    "aum": 13700096000.0,
+    "mer": 0.09,
+    "inceptionDate": "2013-04-10"
+  },
+  {
+    "ticker": "XEF",
+    "yahooSymbol": "XEF.TO",
+    "name": "iShares Core MSCI EAFE IMI Index ETF",
+    "aum": 24329615360.0,
+    "mer": 0.23,
+    "inceptionDate": "2013-04-10"
+  },
+  {
+    "ticker": "XMH",
+    "yahooSymbol": "XMH.TO",
+    "name": "iShares S&P U.S. Mid-Cap Index ETF (CAD-Hedged)",
+    "aum": 547076672.0,
+    "mer": 0.16,
+    "inceptionDate": "2015-08-04"
+  },
+  {
+    "ticker": "XMC",
+    "yahooSymbol": "XMC.TO",
+    "name": "iShares S&P U.S. Mid-Cap Index ETF",
+    "aum": 15153.65,
+    "mer": 0.16,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XDIV",
+    "yahooSymbol": "XDIV.TO",
+    "name": "iShares Core MSCI Canadian Quality Dividend Index ETF",
+    "aum": 6197069824.0,
+    "mer": 0.11,
+    "inceptionDate": "2017-06-07"
+  },
+  {
+    "ticker": "XMU",
+    "yahooSymbol": "XMU.TO",
+    "name": "iShares MSCI Min Vol USA Index ETF",
+    "aum": 208819.64,
+    "mer": 0.33,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XQQ",
+    "yahooSymbol": "XQQ.TO",
+    "name": "iShares NASDAQ 100 Index ETF (CAD-Hedged)",
+    "aum": 5625104896.0,
+    "mer": 0.39,
+    "inceptionDate": "2011-05-03"
+  },
+  {
+    "ticker": "XWD",
+    "yahooSymbol": "XWD.TO",
+    "name": "iShares MSCI World Index ETF",
+    "aum": 1803601536.0,
+    "mer": 0.48,
+    "inceptionDate": "2009-06-18"
+  },
+  {
+    "ticker": "XGRO",
+    "yahooSymbol": "XGRO.TO",
+    "name": "iShares Core Growth ETF Portfolio",
+    "aum": 5213974528.0,
+    "mer": 0.2,
+    "inceptionDate": "2007-06-21"
+  },
+  {
+    "ticker": "XDUH",
+    "yahooSymbol": "XDUH.TO",
+    "name": "iShares Core MSCI US Quality Dividend Index ETF (CAD-Hedged)",
+    "aum": 117373432.0,
+    "mer": 0.16,
+    "inceptionDate": "2017-06-13"
+  },
+  {
+    "ticker": "XBAL",
+    "yahooSymbol": "XBAL.TO",
+    "name": "iShares Core Balanced ETF Portfolio",
+    "aum": 3476351744.0,
+    "mer": 0.19,
+    "inceptionDate": "2007-06-21"
+  },
+  {
+    "ticker": "XDG",
+    "yahooSymbol": "XDG.TO",
+    "name": "iShares Core MSCI Global Quality Dividend Index ETF",
+    "aum": 163279.45,
+    "mer": 0.22,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XSU",
+    "yahooSymbol": "XSU.TO",
+    "name": "iShares U.S. Small Cap Index ETF (CAD-Hedged)",
+    "aum": 654769088.0,
+    "mer": 0.36,
+    "inceptionDate": "2007-05-14"
+  },
+  {
+    "ticker": "XDU",
+    "yahooSymbol": "XDU.TO",
+    "name": "iShares Core MSCI US Quality Dividend Index ETF",
+    "aum": 200509.3,
+    "mer": 0.16,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XSUS",
+    "yahooSymbol": "XSUS.TO",
+    "name": "iShares ESG Aware MSCI USA Index ETF",
+    "aum": 738779456.0,
+    "mer": 0.23,
+    "inceptionDate": "2019-03-18"
+  },
+  {
+    "ticker": "XSEA",
+    "yahooSymbol": "XSEA.TO",
+    "name": "iShares ESG Aware MSCI EAFE Index ETF",
+    "aum": 374690432.0,
+    "mer": 0.28,
+    "inceptionDate": "2019-03-18"
+  },
+  {
+    "ticker": "XDGH",
+    "yahooSymbol": "XDGH.TO",
+    "name": "iShares Core MSCI Global Quality Dividend Index ETF (CAD-Hedged)",
+    "aum": 185988704.0,
+    "mer": 0.22,
+    "inceptionDate": "2017-06-13"
+  },
+  {
+    "ticker": "XESG",
+    "yahooSymbol": "XESG.TO",
+    "name": "iShares ESG Aware MSCI Canada Index ETF",
+    "aum": 641577920.0,
+    "mer": 0.17,
+    "inceptionDate": "2019-03-18"
+  },
+  {
+    "ticker": "XGI",
+    "yahooSymbol": "XGI.TO",
+    "name": "iShares S&P Global Industrials Index ETF (CAD-Hedged)",
+    "aum": 159139536.0,
+    "mer": 0.66,
+    "inceptionDate": "2013-03-26"
+  },
+  {
+    "ticker": "XCD",
+    "yahooSymbol": "XCD.TO",
+    "name": "iShares S&P Global Consumer Discretionary Index ETF (CAD-Hedged)",
+    "aum": 52119160.0,
+    "mer": 0.66,
+    "inceptionDate": "2013-03-26"
+  },
+  {
+    "ticker": "XSEM",
+    "yahooSymbol": "XSEM.TO",
+    "name": "iShares ESG Aware MSCI Emerging Markets Index ETF",
+    "aum": 6462587392.0,
+    "mer": 0.34,
+    "inceptionDate": "2019-03-18"
+  },
+  {
+    "ticker": "XSP",
+    "yahooSymbol": "XSP.TO",
+    "name": "iShares Core S&P 500 Index ETF (CAD-Hedged)",
+    "aum": 16300619776.0,
+    "mer": 0.09,
+    "inceptionDate": "2001-05-24"
+  },
+  {
+    "ticker": "CWO",
+    "yahooSymbol": "CWO.NE",
+    "name": "iShares Emerging Markets Fundamental Index ETF Common Class",
+    "aum": 118041608.0,
+    "mer": 0.73,
+    "inceptionDate": "2009-04-07"
+  },
+  {
+    "ticker": "CRQ",
+    "yahooSymbol": "CRQ.NE",
+    "name": "iShares Canadian Fundamental Index ETF Common Class",
+    "aum": 150544400.0,
+    "mer": 0.72,
+    "inceptionDate": "2006-02-22"
+  },
+  {
+    "ticker": "XID",
+    "yahooSymbol": "XID.TO",
+    "name": "iShares India Index ETF",
+    "aum": 116945328.0,
+    "mer": 0.92,
+    "inceptionDate": "2010-01-21"
+  },
+  {
+    "ticker": "FIE",
+    "yahooSymbol": "FIE.TO",
+    "name": "iShares Canadian Financial Monthly Income ETF Common Class",
+    "aum": 1362838656.0,
+    "mer": 0.74,
+    "inceptionDate": "2010-04-16"
+  },
+  {
+    "ticker": "XCH",
+    "yahooSymbol": "XCH.TO",
+    "name": "iShares China Index ETF",
+    "aum": 178739568.0,
+    "mer": 0.86,
+    "inceptionDate": "2010-01-21"
+  },
+  {
+    "ticker": "XEMC",
+    "yahooSymbol": "XEMC.TO",
+    "name": "iShares MSCI Emerging Markets ex China Index ETF",
+    "aum": 150189072.0,
+    "mer": 0.31,
+    "inceptionDate": "2023-02-07"
+  },
+  {
+    "ticker": "XHC",
+    "yahooSymbol": "XHC.TO",
+    "name": "iShares Global Healthcare Index ETF (CAD-Hedged)",
+    "aum": 552648128.0,
+    "mer": 0.66,
+    "inceptionDate": "2011-04-12"
+  },
+  {
+    "ticker": "XBAI",
+    "yahooSymbol": "XBAI.TO",
+    "name": "iShares A.I. Innovation and Tech ETF CAD",
+    "aum": 0.0,
+    "mer": null,
+    "inceptionDate": "2026-10-08"
+  },
+  {
+    "ticker": "XTR",
+    "yahooSymbol": "XTR.TO",
+    "name": "iShares Diversified Monthly Income ETF",
+    "aum": 362375456.0,
+    "mer": 0.6,
+    "inceptionDate": "2005-12-19"
+  },
+  {
+    "ticker": "XDRV",
+    "yahooSymbol": "XDRV.TO",
+    "name": "iShares Global Electric and Autonomous Vehicles Index ETF",
+    "aum": 5719246.0,
+    "mer": 0.44,
+    "inceptionDate": "2023-02-07"
+  },
+  {
+    "ticker": "CWW",
+    "yahooSymbol": "CWW.TO",
+    "name": "iShares Global Water Index ETF Common Class",
+    "aum": 288731968.0,
+    "mer": 0.66,
+    "inceptionDate": "2007-06-04"
+  },
+  {
+    "ticker": "XCV",
+    "yahooSymbol": "XCV.TO",
+    "name": "iShares Canadian Value Index ETF",
+    "aum": 236789888.0,
+    "mer": 0.55,
+    "inceptionDate": "2006-11-06"
+  },
+  {
+    "ticker": "XCG",
+    "yahooSymbol": "XCG.TO",
+    "name": "iShares Canadian Growth Index ETF",
+    "aum": 147216768.0,
+    "mer": 0.55,
+    "inceptionDate": "2006-11-06"
+  },
+  {
+    "ticker": "XUSR",
+    "yahooSymbol": "XUSR.TO",
+    "name": "iShares ESG Advanced MSCI USA Index ETF",
+    "aum": 558240640.0,
+    "mer": 0.23,
+    "inceptionDate": "2020-04-15"
+  },
+  {
+    "ticker": "XDV",
+    "yahooSymbol": "XDV.TO",
+    "name": "iShares Canadian Select Dividend Index ETF",
+    "aum": 2571163136.0,
+    "mer": 0.55,
+    "inceptionDate": "2005-12-19"
+  },
+  {
+    "ticker": "XDSR",
+    "yahooSymbol": "XDSR.TO",
+    "name": "iShares ESG Advanced MSCI EAFE Index ETF",
+    "aum": 1010912576.0,
+    "mer": 0.28,
+    "inceptionDate": "2020-04-15"
+  },
+  {
+    "ticker": "XINT",
+    "yahooSymbol": "XINT.TO",
+    "name": "iShares Core MSCI All-International Equity Index ETF",
+    "aum": 32354068.0,
+    "mer": null,
+    "inceptionDate": "2026-08-05"
+  },
+  {
+    "ticker": "IBQT",
+    "yahooSymbol": "IBQT.TO",
+    "name": "iShares Equity + Bitcoin ETF Portfolio",
+    "aum": 1199122.0,
+    "mer": null,
+    "inceptionDate": "2026-08-05"
+  },
+  {
+    "ticker": "XEU",
+    "yahooSymbol": "XEU.TO",
+    "name": "iShares MSCI Europe IMI Index ETF",
+    "aum": 690999744.0,
+    "mer": 0.28,
+    "inceptionDate": "2014-04-15"
+  },
+  {
+    "ticker": "CEW",
+    "yahooSymbol": "CEW.TO",
+    "name": "iShares Equal Weight Banc & Lifeco ETF Common Class",
+    "aum": 409823104.0,
+    "mer": 0.61,
+    "inceptionDate": "2008-02-06"
+  },
+  {
+    "ticker": "XEH",
+    "yahooSymbol": "XEH.TO",
+    "name": "iShares MSCI Europe IMI Index ETF (CAD-Hedged)",
+    "aum": 295892032.0,
+    "mer": 0.28,
+    "inceptionDate": "2014-04-22"
+  },
+  {
+    "ticker": "XUU.U",
+    "yahooSymbol": "XUU-U.TO",
+    "name": "iShares Core S&P U.S. Total Market Index ETF USD Share Class",
+    "aum": 512975.78,
+    "mer": 0.07,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "COW",
+    "yahooSymbol": "COW.TO",
+    "name": "iShares Global Agriculture Index ETF Common Class",
+    "aum": 275541888.0,
+    "mer": 0.71,
+    "inceptionDate": "2007-12-19"
+  },
+  {
+    "ticker": "XEF.U",
+    "yahooSymbol": "XEF-U.TO",
+    "name": "iShares Core MSCI EAFE IMI Index ETF",
+    "aum": 24329615360.0,
+    "mer": 0.23,
+    "inceptionDate": "2013-04-10"
+  },
+  {
+    "ticker": "CIF",
+    "yahooSymbol": "CIF.TO",
+    "name": "iShares Global Infrastructure Index ETF Common Class",
+    "aum": 1551647232.0,
+    "mer": 0.72,
+    "inceptionDate": "2008-08-27"
+  },
+  {
+    "ticker": "XUS.U",
+    "yahooSymbol": "XUS-U.TO",
+    "name": "iShares Core S&P 500 Index ETF",
+    "aum": 13700096000.0,
+    "mer": 0.09,
+    "inceptionDate": "2013-04-10"
+  },
+  {
+    "ticker": "CYH",
+    "yahooSymbol": "CYH.TO",
+    "name": "iShares Global Monthly Dividend Index ETF (CAD-Hedged) Common Class",
+    "aum": 195910400.0,
+    "mer": 0.66,
+    "inceptionDate": "2008-01-15"
+  },
+  {
+    "ticker": "XDNA",
+    "yahooSymbol": "XDNA.TO",
+    "name": "iShares Genomics Immunology and Healthcare Index ETF CAD",
+    "aum": 18729220.0,
+    "mer": 0.44,
+    "inceptionDate": "2022-04-26"
+  },
+  {
+    "ticker": "XCLN",
+    "yahooSymbol": "XCLN.TO",
+    "name": "iShares Global Clean Energy Index ETF CAD",
+    "aum": 29141636.0,
+    "mer": 0.39,
+    "inceptionDate": "2022-04-26"
+  },
+  {
+    "ticker": "XQQU",
+    "yahooSymbol": "XQQU.TO",
+    "name": "iShares NASDAQ 100 Index ETF",
+    "aum": 1111993.6,
+    "mer": 0.38,
+    "inceptionDate": "2023-09-06"
+  },
+  {
+    "ticker": "XEXP",
+    "yahooSymbol": "XEXP.TO",
+    "name": "iShares Exponential Technologies Index ETF CAD",
+    "aum": 45580092.0,
+    "mer": 0.44,
+    "inceptionDate": "2022-04-26"
+  },
+  {
+    "ticker": "XEC.U",
+    "yahooSymbol": "XEC-U.TO",
+    "name": "iShares Core MSCI Emerging Markets IMI Index ETF USD Share Class",
+    "aum": 109682.13,
+    "mer": 0.28,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XQQU.U",
+    "yahooSymbol": "XQQU-U.TO",
+    "name": "iShares NASDAQ 100 Index ETF USD Units",
+    "aum": 1111993.6,
+    "mer": 0.39,
+    "inceptionDate": "2023-09-06"
+  },
+  {
+    "ticker": "XAW.U",
+    "yahooSymbol": "XAW-U.TO",
+    "name": "iShares Core MSCI All Country World ex Canada Index ETF USD Share Class",
+    "aum": 273793.6,
+    "mer": 0.22,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XHAK",
+    "yahooSymbol": "XHAK.TO",
+    "name": "iShares Cybersecurity and Tech Index ETF USD",
+    "aum": 33294536.0,
+    "mer": 0.44,
+    "inceptionDate": "2022-04-26"
+  },
+  {
+    "ticker": "XETM",
+    "yahooSymbol": "XETM.TO",
+    "name": "iShares S&P/TSX Energy Transition Materials Index ETF",
+    "aum": 105515552.0,
+    "mer": 0.59,
+    "inceptionDate": "2023-09-06"
+  },
+  {
+    "ticker": "XMU.U",
+    "yahooSymbol": "XMU-U.TO",
+    "name": "iShares MSCI Min Vol USA Index ETF USD Share Class",
+    "aum": 208819.64,
+    "mer": 0.33,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XCHP",
+    "yahooSymbol": "XCHP.TO",
+    "name": "iShares Semiconductor Index ETF",
+    "aum": 376837600.0,
+    "mer": 0.39,
+    "inceptionDate": "2023-09-06"
+  },
+  {
+    "ticker": "XDU.U",
+    "yahooSymbol": "XDU-U.TO",
+    "name": "iShares Core MSCI US Quality Dividend Index ETF USD Share Class",
+    "aum": 200509.3,
+    "mer": 0.15,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "CIE",
+    "yahooSymbol": "CIE.NE",
+    "name": "iShares International Fundamental Index ETF Common Class",
+    "aum": 246306016.0,
+    "mer": 0.73,
+    "inceptionDate": "2007-02-14"
+  },
+  {
+    "ticker": "XDG.U",
+    "yahooSymbol": "XDG-U.TO",
+    "name": "iShares Core MSCI Global Quality Dividend Index ETF USD Share Class",
+    "aum": 163279.45,
+    "mer": 0.22,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XUSF",
+    "yahooSymbol": "XUSF.TO",
+    "name": "iShares S&P U.S. Financials Index ETF",
+    "aum": 62694656.0,
+    "mer": 0.28,
+    "inceptionDate": "2023-09-06"
+  },
+  {
+    "ticker": "XAD",
+    "yahooSymbol": "XAD.TO",
+    "name": "iShares U.S. Aerospace & Defense Index ETF",
+    "aum": 155121040.0,
+    "mer": 0.43,
+    "inceptionDate": "2023-09-06"
+  },
+  {
+    "ticker": "XMC.U",
+    "yahooSymbol": "XMC-U.TO",
+    "name": "iShares S&P U.S. Mid-Cap Index ETF USD Share Class",
+    "aum": 15153.65,
+    "mer": 0.16,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XEN",
+    "yahooSymbol": "XEN.TO",
+    "name": "iShares Jantzi Social Index ETF",
+    "aum": 176814832.0,
+    "mer": 0.55,
+    "inceptionDate": "2007-05-14"
+  },
+  {
+    "ticker": "CUD",
+    "yahooSymbol": "CUD.TO",
+    "name": "iShares US Dividend Growers Index ETF (CAD-Hedged) Common Class",
+    "aum": 224053296.0,
+    "mer": 0.66,
+    "inceptionDate": "2011-09-13"
+  },
+  {
+    "ticker": "CDZ",
+    "yahooSymbol": "CDZ.TO",
+    "name": "iShares S&P/TSX Canadian Dividend Aristocrats Index ETF Common Class",
+    "aum": 1209309568.0,
+    "mer": 0.66,
+    "inceptionDate": "2006-09-08"
+  },
+  {
+    "ticker": "XTOT",
+    "yahooSymbol": "XTOT.TO",
+    "name": "iShares Core S&P Total U.S. Stock Market Index ETF",
+    "aum": 7169278464.0,
+    "mer": 0.07,
+    "inceptionDate": "2025-05-28"
+  },
+  {
+    "ticker": "XQLT",
+    "yahooSymbol": "XQLT.TO",
+    "name": "iShares MSCI USA Quality Factor Index ETF",
+    "aum": 263659424.0,
+    "mer": 0.32,
+    "inceptionDate": "2019-09-04"
+  },
+  {
+    "ticker": "XTOT.U",
+    "yahooSymbol": "XTOT-U.TO",
+    "name": "iShares Core S&P Total U.S. Stock Market Index ETF",
+    "aum": 7169278464.0,
+    "mer": 0.07,
+    "inceptionDate": "2025-05-28"
+  },
+  {
+    "ticker": "XIU",
+    "yahooSymbol": "XIU.TO",
+    "name": "iShares S&P/TSX 60 Index ETF",
+    "aum": 22559236096.0,
+    "mer": 0.18,
+    "inceptionDate": "1999-09-28"
+  },
+  {
+    "ticker": "CJP",
+    "yahooSymbol": "CJP.NE",
+    "name": "iShares Japan Fundamental Index ETF (CAD-Hedged) Common Class",
+    "aum": 169472352.0,
+    "mer": 0.72,
+    "inceptionDate": "2007-02-14"
+  },
+  {
+    "ticker": "XEG",
+    "yahooSymbol": "XEG.TO",
+    "name": "iShares S&P/TSX Capped Energy Index ETF",
+    "aum": 2463556608.0,
+    "mer": 0.6,
+    "inceptionDate": "2001-03-19"
+  },
+  {
+    "ticker": "XST",
+    "yahooSymbol": "XST.TO",
+    "name": "iShares S&P/TSX Capped Consumer Staples Index ETF",
+    "aum": 392184224.0,
+    "mer": 0.61,
+    "inceptionDate": "2011-04-12"
+  },
+  {
+    "ticker": "XIC",
+    "yahooSymbol": "XIC.TO",
+    "name": "iShares Core S&P/TSX Capped Composite Index ETF",
+    "aum": 35022647296.0,
+    "mer": 0.06,
+    "inceptionDate": "2001-02-16"
+  },
+  {
+    "ticker": "CPD",
+    "yahooSymbol": "CPD.TO",
+    "name": "iShares S&P/TSX Canadian Preferred Share Index ETF Common Class",
+    "aum": 1105783424.0,
+    "mer": 0.49,
+    "inceptionDate": "2007-04-10"
+  },
+  {
+    "ticker": "XSMC",
+    "yahooSymbol": "XSMC.TO",
+    "name": "iShares S&P U.S. Small-Cap Index ETF",
+    "aum": 101674800.0,
+    "mer": 0.21,
+    "inceptionDate": "2019-09-04"
+  },
+  {
+    "ticker": "XMA",
+    "yahooSymbol": "XMA.TO",
+    "name": "iShares S&P/TSX Capped Materials Index ETF",
+    "aum": 721680320.0,
+    "mer": 0.61,
+    "inceptionDate": "2005-12-19"
+  },
+  {
+    "ticker": "XUSC",
+    "yahooSymbol": "XUSC.TO",
+    "name": "iShares S&P 500 3% Capped Index ETF CAD Units",
+    "aum": 477852.28,
+    "mer": 0.13,
+    "inceptionDate": "2024-07-09"
+  },
+  {
+    "ticker": "XSMH",
+    "yahooSymbol": "XSMH.TO",
+    "name": "iShares S&P U.S. Small-Cap Index ETF (CAD-Hedged)",
+    "aum": 56053976.0,
+    "mer": 0.22,
+    "inceptionDate": "2019-09-04"
+  },
+  {
+    "ticker": "XFH",
+    "yahooSymbol": "XFH.TO",
+    "name": "iShares Core MSCI EAFE IMI Index ETF (CAD-Hedged)",
+    "aum": 3258827520.0,
+    "mer": 0.23,
+    "inceptionDate": "2015-02-10"
+  },
+  {
+    "ticker": "XIT",
+    "yahooSymbol": "XIT.TO",
+    "name": "iShares S&P/TSX Capped Information Technology Index ETF",
+    "aum": 755542848.0,
+    "mer": 0.6,
+    "inceptionDate": "2001-03-19"
+  },
+  {
+    "ticker": "XFN",
+    "yahooSymbol": "XFN.TO",
+    "name": "iShares S&P/TSX Capped Financials Index ETF",
+    "aum": 2194989824.0,
+    "mer": 0.61,
+    "inceptionDate": "2001-03-23"
+  },
+  {
+    "ticker": "XMTM",
+    "yahooSymbol": "XMTM.TO",
+    "name": "iShares MSCI USA Momentum Factor Index ETF",
+    "aum": 31945916.0,
+    "mer": 0.32,
+    "inceptionDate": "2019-09-04"
+  },
+  {
+    "ticker": "XBM",
+    "yahooSymbol": "XBM.TO",
+    "name": "iShares S&P/TSX Global Base Metals Index ETF",
+    "aum": 608923968.0,
+    "mer": 0.6,
+    "inceptionDate": "2011-04-12"
+  },
+  {
+    "ticker": "XEI",
+    "yahooSymbol": "XEI.TO",
+    "name": "iShares S&P/TSX Composite High Dividend Index ETF",
+    "aum": 4264516608.0,
+    "mer": 0.22,
+    "inceptionDate": "2011-04-12"
+  },
+  {
+    "ticker": "XVLU",
+    "yahooSymbol": "XVLU.TO",
+    "name": "iShares MSCI USA Value Factor Index ETF",
+    "aum": 90369296.0,
+    "mer": 0.31,
+    "inceptionDate": "2019-09-04"
+  },
+  {
+    "ticker": "XMD",
+    "yahooSymbol": "XMD.TO",
+    "name": "iShares S&P/TSX Completion Index ETF",
+    "aum": 896295872.0,
+    "mer": 0.6,
+    "inceptionDate": "2001-03-02"
+  },
+  {
+    "ticker": "XUT",
+    "yahooSymbol": "XUT.TO",
+    "name": "iShares S&P/TSX Capped Utilities Index ETF",
+    "aum": 925768640.0,
+    "mer": 0.61,
+    "inceptionDate": "2011-04-12"
+  },
+  {
+    "ticker": "XCSR",
+    "yahooSymbol": "XCSR.TO",
+    "name": "iShares ESG Advanced MSCI Canada Index ETF",
+    "aum": 551197568.0,
+    "mer": 0.17,
+    "inceptionDate": "2020-04-15"
+  },
+  {
+    "ticker": "XCNS",
+    "yahooSymbol": "XCNS.TO",
+    "name": "iShares Core Conservative Balanced ETF Portfolio",
+    "aum": 434786272.0,
+    "mer": 0.19,
+    "inceptionDate": "2019-08-07"
+  },
+  {
+    "ticker": "XAW",
+    "yahooSymbol": "XAW.TO",
+    "name": "iShares Core MSCI All Country World ex Canada Index ETF",
+    "aum": 273793.6,
+    "mer": 0.22,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XPF",
+    "yahooSymbol": "XPF.TO",
+    "name": "iShares S&P/TSX North American Preferred Stock Index ETF (CAD-Hedged)",
+    "aum": 236674608.0,
+    "mer": 0.5,
+    "inceptionDate": "2010-11-22"
+  },
+  {
+    "ticker": "XHU",
+    "yahooSymbol": "XHU.TO",
+    "name": "iShares U.S. High Dividend Equity Index ETF",
+    "aum": 190005952.0,
+    "mer": 0.34,
+    "inceptionDate": "2015-02-10"
+  },
+  {
+    "ticker": "XGD",
+    "yahooSymbol": "XGD.TO",
+    "name": "iShares S&P/TSX Global Gold Index ETF",
+    "aum": 4366242816.0,
+    "mer": 0.6,
+    "inceptionDate": "2001-03-23"
+  },
+  {
+    "ticker": "XSPC",
+    "yahooSymbol": "XSPC.TO",
+    "name": "iShares S&P 500 3% Capped Index ETF (CAD-Hedged)",
+    "aum": 350299456.0,
+    "mer": 0.14,
+    "inceptionDate": "2024-07-09"
+  },
+  {
+    "ticker": "XEQT",
+    "yahooSymbol": "XEQT.TO",
+    "name": "iShares Core Equity ETF Portfolio",
+    "aum": 22910253056.0,
+    "mer": 0.2,
+    "inceptionDate": "2019-08-07"
+  },
+  {
+    "ticker": "XUU",
+    "yahooSymbol": "XUU.TO",
+    "name": "iShares Core S&P U.S. Total Market Index ETF",
+    "aum": 512975.78,
+    "mer": 0.07,
+    "inceptionDate": "2019-10-22"
+  },
+  {
+    "ticker": "XUSC.U",
+    "yahooSymbol": "XUSC-U.TO",
+    "name": "iShares S&P 500 3% Capped Index ETF USD Units",
+    "aum": 477852.28,
+    "mer": 0.13,
+    "inceptionDate": "2024-07-09"
+  },
+  {
+    "ticker": "XINC",
+    "yahooSymbol": "XINC.TO",
+    "name": "iShares Core Income Balanced ETF Portfolio",
+    "aum": 126601400.0,
+    "mer": 0.19,
+    "inceptionDate": "2019-08-07"
+  },
+  {
+    "ticker": "XUH",
+    "yahooSymbol": "XUH.TO",
+    "name": "iShares Core S&P U.S. Total Market Index ETF (CAD-Hedged)",
+    "aum": 515357216.0,
+    "mer": 0.07,
+    "inceptionDate": "2015-02-17"
+  },
+  {
+    "ticker": "XCS",
+    "yahooSymbol": "XCS.TO",
+    "name": "iShares S&P/TSX Small Cap Index ETF",
+    "aum": 251042560.0,
+    "mer": 0.6,
+    "inceptionDate": "2007-05-14"
+  },
+  {
+    "ticker": "XHD",
+    "yahooSymbol": "XHD.TO",
+    "name": "iShares U.S. High Dividend Equity Index ETF (CAD-Hedged)",
+    "aum": 240899808.0,
+    "mer": 0.33,
+    "inceptionDate": "2012-08-14"
+  },
+  {
+    "ticker": "CLU",
+    "yahooSymbol": "CLU.NE",
+    "name": "iShares US Fundamental Index ETF (CAD-Hedged) Common Class",
+    "aum": 114462144.0,
+    "mer": 0.72,
+    "inceptionDate": "2006-09-08"
+  },
+  {
+    "ticker": "CLU.C",
+    "yahooSymbol": "CLU-C.NE",
+    "name": "iShares US Fundamental Index ETF Common Class",
+    "aum": 99830304.0,
+    "mer": 0.72,
+    "inceptionDate": "2009-04-07"
+  },
+  {
+    "ticker": "XMW",
+    "yahooSymbol": "XMW.TO",
+    "name": "iShares MSCI Min Vol Global Index ETF",
+    "aum": 174815216.0,
+    "mer": 0.48,
+    "inceptionDate": "2012-07-24"
+  }
+]

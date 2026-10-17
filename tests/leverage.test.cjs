@@ -144,6 +144,7 @@ function hooks() {
       useState(initial) { const i = cursor++; if (!(i in state)) state[i] = initial; return [state[i], next => { state[i] = typeof next === 'function' ? next(state[i]) : next; }]; },
       useRef(initial) { const i = cursor++; state[i] ??= { current: initial }; return state[i]; },
       useCallback: fn => fn,
+      useEffect() {},
       useMemo(fn, deps) { const i = cursor++; if (!memo[i] || deps.some((d, j) => d !== memo[i].deps[j])) memo[i] = { deps, value: fn() }; return memo[i].value; },
     },
   };

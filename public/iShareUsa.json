@@ -1,0 +1,2322 @@
+[
+  {
+    "ticker": "IVV",
+    "yahooSymbol": "IVV",
+    "name": "iShares Core S&P 500 ETF",
+    "aum": 881268883456,
+    "mer": 0.03,
+    "inceptionDate": "2000-05-15"
+  },
+  {
+    "ticker": "IEFA",
+    "yahooSymbol": "IEFA",
+    "name": "iShares Core MSCI EAFE ETF",
+    "aum": 190214750208,
+    "mer": 0.07,
+    "inceptionDate": "2012-10-18"
+  },
+  {
+    "ticker": "IEMG",
+    "yahooSymbol": "IEMG",
+    "name": "iShares Core MSCI Emerging Markets ETF",
+    "aum": 160075055104,
+    "mer": 0.09,
+    "inceptionDate": "2012-10-18"
+  },
+  {
+    "ticker": "IWF",
+    "yahooSymbol": "IWF",
+    "name": "iShares Russell 1000 Growth ETF",
+    "aum": 127738003456,
+    "mer": 0.18,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "IJH",
+    "yahooSymbol": "IJH",
+    "name": "iShares Core S&P Mid-Cap ETF",
+    "aum": 120931426304,
+    "mer": 0.05,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "IJR",
+    "yahooSymbol": "IJR",
+    "name": "iShares Core S&P Small-Cap ETF",
+    "aum": 102559449088,
+    "mer": 0.06,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "ITOT",
+    "yahooSymbol": "ITOT",
+    "name": "iShares Core S&P Total U.S. Stock Market ETF",
+    "aum": 95863930880,
+    "mer": 0.03,
+    "inceptionDate": "2004-01-20"
+  },
+  {
+    "ticker": "IWD",
+    "yahooSymbol": "IWD",
+    "name": "iShares Russell 1000 Value ETF",
+    "aum": 80959332352,
+    "mer": 0.18,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "IVW",
+    "yahooSymbol": "IVW",
+    "name": "iShares S&P 500 Growth ETF",
+    "aum": 78179057664,
+    "mer": 0.18,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "IWM",
+    "yahooSymbol": "IWM",
+    "name": "iShares Russell 2000 ETF",
+    "aum": 78041726976,
+    "mer": 0.19,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "EFA",
+    "yahooSymbol": "EFA",
+    "name": "iShares MSCI EAFE ETF",
+    "aum": 76699582464,
+    "mer": 0.32,
+    "inceptionDate": "2001-08-14"
+  },
+  {
+    "ticker": "IXUS",
+    "yahooSymbol": "IXUS",
+    "name": "iShares Core MSCI Total International Stock ETF",
+    "aum": 58758029312,
+    "mer": 0.07,
+    "inceptionDate": "2012-10-18"
+  },
+  {
+    "ticker": "IWR",
+    "yahooSymbol": "IWR",
+    "name": "iShares Russell Mid-Cap ETF",
+    "aum": 54899474432,
+    "mer": 0.18,
+    "inceptionDate": "2001-07-17"
+  },
+  {
+    "ticker": "IWB",
+    "yahooSymbol": "IWB",
+    "name": "iShares Russell 1000 ETF",
+    "aum": 48563396608,
+    "mer": 0.15,
+    "inceptionDate": "2000-05-15"
+  },
+  {
+    "ticker": "IVE",
+    "yahooSymbol": "IVE",
+    "name": "iShares S&P 500 Value ETF",
+    "aum": 48203206656,
+    "mer": 0.18,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "QUAL",
+    "yahooSymbol": "QUAL",
+    "name": "iShares MSCI USA Quality Factor ETF",
+    "aum": 47676018688,
+    "mer": 0.15,
+    "inceptionDate": "2013-07-16"
+  },
+  {
+    "ticker": "SOXX",
+    "yahooSymbol": "SOXX",
+    "name": "iShares Semiconductor ETF",
+    "aum": 48434552832,
+    "mer": 0.33,
+    "inceptionDate": "2001-07-10"
+  },
+  {
+    "ticker": "DGRO",
+    "yahooSymbol": "DGRO",
+    "name": "iShares Core Dividend Growth ETF",
+    "aum": 41891237888,
+    "mer": 0.08,
+    "inceptionDate": "2014-06-10"
+  },
+  {
+    "ticker": "DYNF",
+    "yahooSymbol": "DYNF",
+    "name": "iShares U.S. Equity Factor Rotation Active ETF",
+    "aum": 41843949568,
+    "mer": 0.26,
+    "inceptionDate": "2019-03-19"
+  },
+  {
+    "ticker": "IUSG",
+    "yahooSymbol": "IUSG",
+    "name": "iShares Core S&P U.S. Growth ETF",
+    "aum": 34000203776,
+    "mer": 0.04,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "ACWI",
+    "yahooSymbol": "ACWI",
+    "name": "iShares MSCI ACWI ETF",
+    "aum": 32829794304,
+    "mer": 0.32,
+    "inceptionDate": "2008-03-26"
+  },
+  {
+    "ticker": "IDEV",
+    "yahooSymbol": "IDEV",
+    "name": "iShares Core MSCI International Developed Markets ETF",
+    "aum": 32156459008,
+    "mer": 0.04,
+    "inceptionDate": "2017-03-21"
+  },
+  {
+    "ticker": "EEM",
+    "yahooSymbol": "EEM",
+    "name": "iShares MSCI Emerging Markets ETF",
+    "aum": 31071397888,
+    "mer": 0.72,
+    "inceptionDate": "2003-04-07"
+  },
+  {
+    "ticker": "EFV",
+    "yahooSymbol": "EFV",
+    "name": "iShares MSCI EAFE Value ETF",
+    "aum": 30765787136,
+    "mer": 0.31,
+    "inceptionDate": "2005-08-01"
+  },
+  {
+    "ticker": "IUSV",
+    "yahooSymbol": "IUSV",
+    "name": "iShares Core S&P U.S. Value ETF",
+    "aum": 27082864640,
+    "mer": 0.04,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "IYW",
+    "yahooSymbol": "IYW",
+    "name": "iShares U.S. Technology ETF",
+    "aum": 26532593664,
+    "mer": 0.37,
+    "inceptionDate": "2000-05-15"
+  },
+  {
+    "ticker": "EMXC",
+    "yahooSymbol": "EMXC",
+    "name": "iShares MSCI Emerging Markets ex China ETF",
+    "aum": 25333065728,
+    "mer": 0.25,
+    "inceptionDate": "2017-07-18"
+  },
+  {
+    "ticker": "EWY",
+    "yahooSymbol": "EWY",
+    "name": "iShares MSCI South Korea ETF",
+    "aum": 26213310464,
+    "mer": 0.59,
+    "inceptionDate": "2000-05-09"
+  },
+  {
+    "ticker": "USMV",
+    "yahooSymbol": "USMV",
+    "name": "iShares MSCI USA Min Vol Factor ETF",
+    "aum": 23164264448,
+    "mer": 0.15,
+    "inceptionDate": "2011-10-18"
+  },
+  {
+    "ticker": "EWJ",
+    "yahooSymbol": "EWJ",
+    "name": "iShares MSCI Japan ETF",
+    "aum": 23533963264,
+    "mer": 0.49,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "DVY",
+    "yahooSymbol": "DVY",
+    "name": "iShares Select Dividend ETF",
+    "aum": 22161467392,
+    "mer": 0.38,
+    "inceptionDate": "2003-11-03"
+  },
+  {
+    "ticker": "OEF",
+    "yahooSymbol": "OEF",
+    "name": "iShares S&P 100 ETF",
+    "aum": 20433901568,
+    "mer": 0.2,
+    "inceptionDate": "2000-10-23"
+  },
+  {
+    "ticker": "IWV",
+    "yahooSymbol": "IWV",
+    "name": "iShares Russell 3000 ETF",
+    "aum": 20278747136,
+    "mer": 0.2,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "MTUM",
+    "yahooSymbol": "MTUM",
+    "name": "iShares MSCI USA Momentum Factor ETF",
+    "aum": 20429352960,
+    "mer": 0.15,
+    "inceptionDate": "2013-04-16"
+  },
+  {
+    "ticker": "IWP",
+    "yahooSymbol": "IWP",
+    "name": "iShares Russell Mid-Cap Growth ETF",
+    "aum": 19347443712,
+    "mer": 0.23,
+    "inceptionDate": "2001-07-17"
+  },
+  {
+    "ticker": "ESGU",
+    "yahooSymbol": "ESGU",
+    "name": "iShares ESG Aware MSCI USA ETF",
+    "aum": 17903245312,
+    "mer": 0.15,
+    "inceptionDate": "2016-12-01"
+  },
+  {
+    "ticker": "ACWX",
+    "yahooSymbol": "ACWX",
+    "name": "iShares MSCI ACWI ex U.S. ETF",
+    "aum": 17311576064,
+    "mer": 0.32,
+    "inceptionDate": "2008-03-26"
+  },
+  {
+    "ticker": "IWY",
+    "yahooSymbol": "IWY",
+    "name": "iShares Russell Top 200 Growth ETF",
+    "aum": 16417813504,
+    "mer": 0.2,
+    "inceptionDate": "2009-09-22"
+  },
+  {
+    "ticker": "IWS",
+    "yahooSymbol": "IWS",
+    "name": "iShares Russell Mid-Cap Value ETF",
+    "aum": 14776222720,
+    "mer": 0.23,
+    "inceptionDate": "2001-07-17"
+  },
+  {
+    "ticker": "HDV",
+    "yahooSymbol": "HDV",
+    "name": "iShares Core High Dividend ETF",
+    "aum": 14546607104,
+    "mer": 0.08,
+    "inceptionDate": "2011-03-29"
+  },
+  {
+    "ticker": "EFG",
+    "yahooSymbol": "EFG",
+    "name": "iShares MSCI EAFE Growth ETF",
+    "aum": 15033347072,
+    "mer": 0.34,
+    "inceptionDate": "2005-08-01"
+  },
+  {
+    "ticker": "IGV",
+    "yahooSymbol": "IGV",
+    "name": "iShares Expanded Tech-Software Sector ETF",
+    "aum": 13912004608,
+    "mer": 0.38,
+    "inceptionDate": "2001-07-10"
+  },
+  {
+    "ticker": "BAI",
+    "yahooSymbol": "BAI",
+    "name": "iShares A.I. Innovation and Tech Active ETF",
+    "aum": 14448959488,
+    "mer": 0.55,
+    "inceptionDate": "2024-10-21"
+  },
+  {
+    "ticker": "IWO",
+    "yahooSymbol": "IWO",
+    "name": "iShares Russell 2000 Growth ETF",
+    "aum": 14106266624,
+    "mer": 0.24,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "IWN",
+    "yahooSymbol": "IWN",
+    "name": "iShares Russell 2000 Value ETF",
+    "aum": 13789684736,
+    "mer": 0.24,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "IQLT",
+    "yahooSymbol": "IQLT",
+    "name": "iShares MSCI Intl Quality Factor ETF",
+    "aum": 13607064576,
+    "mer": 0.3,
+    "inceptionDate": "2015-01-13"
+  },
+  {
+    "ticker": "EWZ",
+    "yahooSymbol": "EWZ",
+    "name": "iShares MSCI Brazil ETF",
+    "aum": 8635897856,
+    "mer": 0.59,
+    "inceptionDate": "2000-07-10"
+  },
+  {
+    "ticker": "CORO",
+    "yahooSymbol": "CORO",
+    "name": "iShares International Country Rotation Active ETF",
+    "aum": 12792548352,
+    "mer": 0.55,
+    "inceptionDate": "2024-12-03"
+  },
+  {
+    "ticker": "SCZ",
+    "yahooSymbol": "SCZ",
+    "name": "iShares MSCI EAFE Small-Cap ETF",
+    "aum": 12790174720,
+    "mer": 0.4,
+    "inceptionDate": "2007-12-10"
+  },
+  {
+    "ticker": "EWT",
+    "yahooSymbol": "EWT",
+    "name": "iShares MSCI Taiwan ETF",
+    "aum": 12344310784,
+    "mer": 0.59,
+    "inceptionDate": "2000-06-20"
+  },
+  {
+    "ticker": "PFF",
+    "yahooSymbol": "PFF",
+    "name": "iShares Preferred and Income Securities ETF",
+    "aum": 12322755584,
+    "mer": 0.45,
+    "inceptionDate": "2007-03-26"
+  },
+  {
+    "ticker": "ITA",
+    "yahooSymbol": "ITA",
+    "name": "iShares U.S. Aerospace & Defense ETF",
+    "aum": 12136253440,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "ESGD",
+    "yahooSymbol": "ESGD",
+    "name": "iShares ESG Aware MSCI EAFE ETF",
+    "aum": 11874225152,
+    "mer": 0.2,
+    "inceptionDate": "2016-06-28"
+  },
+  {
+    "ticker": "IGM",
+    "yahooSymbol": "IGM",
+    "name": "iShares Expanded Tech Sector ETF",
+    "aum": 11436122112,
+    "mer": 0.37,
+    "inceptionDate": "2001-03-13"
+  },
+  {
+    "ticker": "IBB",
+    "yahooSymbol": "IBB",
+    "name": "iShares Biotechnology ETF",
+    "aum": 11196648448,
+    "mer": 0.44,
+    "inceptionDate": "2001-02-05"
+  },
+  {
+    "ticker": "IJK",
+    "yahooSymbol": "IJK",
+    "name": "iShares S&P Mid-Cap 400 Growth ETF",
+    "aum": 10285963264,
+    "mer": 0.16,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "IGF",
+    "yahooSymbol": "IGF",
+    "name": "iShares Global Infrastructure ETF",
+    "aum": 10065190912,
+    "mer": 0.37,
+    "inceptionDate": "2007-12-10"
+  },
+  {
+    "ticker": "IXN",
+    "yahooSymbol": "IXN",
+    "name": "iShares Global Tech ETF",
+    "aum": 9729082368,
+    "mer": 0.37,
+    "inceptionDate": "2001-11-12"
+  },
+  {
+    "ticker": "BLCR",
+    "yahooSymbol": "BLCR",
+    "name": "iShares Large Cap Core Active ETF",
+    "aum": 9208093696,
+    "mer": 0.36,
+    "inceptionDate": "2023-10-24"
+  },
+  {
+    "ticker": "IOO",
+    "yahooSymbol": "IOO",
+    "name": "iShares Global 100 ETF",
+    "aum": 9161201664,
+    "mer": 0.4,
+    "inceptionDate": "2000-12-05"
+  },
+  {
+    "ticker": "VLUE",
+    "yahooSymbol": "VLUE",
+    "name": "iShares MSCI USA Value Factor ETF",
+    "aum": 9367618560,
+    "mer": 0.15,
+    "inceptionDate": "2013-04-16"
+  },
+  {
+    "ticker": "IEUR",
+    "yahooSymbol": "IEUR",
+    "name": "iShares Core MSCI Europe ETF",
+    "aum": 9244934144,
+    "mer": 0.1,
+    "inceptionDate": "2014-06-10"
+  },
+  {
+    "ticker": "EZU",
+    "yahooSymbol": "EZU",
+    "name": "iShares MSCI Eurozone ETF",
+    "aum": 9422069760,
+    "mer": 0.5,
+    "inceptionDate": "2000-07-25"
+  },
+  {
+    "ticker": "IJJ",
+    "yahooSymbol": "IJJ",
+    "name": "iShares S&P Mid-Cap 400 Value ETF",
+    "aum": 8333864448,
+    "mer": 0.18,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "URTH",
+    "yahooSymbol": "URTH",
+    "name": "iShares MSCI World ETF",
+    "aum": 8177471488,
+    "mer": 0.24,
+    "inceptionDate": "2012-01-10"
+  },
+  {
+    "ticker": "IDV",
+    "yahooSymbol": "IDV",
+    "name": "iShares International Select Dividend ETF",
+    "aum": 8230910976,
+    "mer": 0.5,
+    "inceptionDate": "2007-06-11"
+  },
+  {
+    "ticker": "IJT",
+    "yahooSymbol": "IJT",
+    "name": "iShares S&P Small-Cap 600 Growth ETF",
+    "aum": 7623017472,
+    "mer": 0.18,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "THRO",
+    "yahooSymbol": "THRO",
+    "name": "iShares U.S. Thematic Rotation Active ETF",
+    "aum": 6832399360,
+    "mer": 0.57,
+    "inceptionDate": "2021-12-14"
+  },
+  {
+    "ticker": "HEFA",
+    "yahooSymbol": "HEFA",
+    "name": "iShares Currency Hedged MSCI EAFE ETF",
+    "aum": 7465138688,
+    "mer": 0.35,
+    "inceptionDate": "2014-01-31"
+  },
+  {
+    "ticker": "IJS",
+    "yahooSymbol": "IJS",
+    "name": "iShares S&P Small-Cap 600 Value ETF",
+    "aum": 7600923136,
+    "mer": 0.18,
+    "inceptionDate": "2000-07-24"
+  },
+  {
+    "ticker": "EWC",
+    "yahooSymbol": "EWC",
+    "name": "iShares MSCI Canada ETF",
+    "aum": 7015600640,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "ESGE",
+    "yahooSymbol": "ESGE",
+    "name": "iShares ESG Aware MSCI EM ETF",
+    "aum": 6925700608,
+    "mer": 0.25,
+    "inceptionDate": "2016-06-28"
+  },
+  {
+    "ticker": "MCHI",
+    "yahooSymbol": "MCHI",
+    "name": "iShares MSCI China ETF",
+    "aum": 5988706816,
+    "mer": 0.59,
+    "inceptionDate": "2011-03-29"
+  },
+  {
+    "ticker": "INDA",
+    "yahooSymbol": "INDA",
+    "name": "iShares MSCI India ETF",
+    "aum": 5830681600,
+    "mer": 0.61,
+    "inceptionDate": "2012-02-02"
+  },
+  {
+    "ticker": "DSI",
+    "yahooSymbol": "DSI",
+    "name": "iShares ESG MSCI KLD 400 ETF",
+    "aum": 5467616768,
+    "mer": 0.25,
+    "inceptionDate": "2006-11-14"
+  },
+  {
+    "ticker": "EFAV",
+    "yahooSymbol": "EFAV",
+    "name": "iShares MSCI EAFE Min Vol Factor ETF",
+    "aum": 5276212736,
+    "mer": 0.2,
+    "inceptionDate": "2011-10-18"
+  },
+  {
+    "ticker": "AIA",
+    "yahooSymbol": "AIA",
+    "name": "iShares Asia 50 ETF",
+    "aum": 4913332224,
+    "mer": 0.5,
+    "inceptionDate": "2007-11-13"
+  },
+  {
+    "ticker": "IVLU",
+    "yahooSymbol": "IVLU",
+    "name": "iShares Edge MSCI Intl Value Factor ETF",
+    "aum": 4505608192,
+    "mer": 0.31,
+    "inceptionDate": "2015-06-16"
+  },
+  {
+    "ticker": "IXJ",
+    "yahooSymbol": "IXJ",
+    "name": "iShares Global Healthcare ETF",
+    "aum": 4315819520,
+    "mer": 0.38,
+    "inceptionDate": "2001-11-13"
+  },
+  {
+    "ticker": "IMTM",
+    "yahooSymbol": "IMTM",
+    "name": "iShares MSCI Intl Momentum Factor ETF",
+    "aum": 4255186944,
+    "mer": 0.3,
+    "inceptionDate": "2015-01-13"
+  },
+  {
+    "ticker": "ARTY",
+    "yahooSymbol": "ARTY",
+    "name": "iShares Future AI & Tech ETF",
+    "aum": 4218499072,
+    "mer": 0.47,
+    "inceptionDate": "2018-06-26"
+  },
+  {
+    "ticker": "ILF",
+    "yahooSymbol": "ILF",
+    "name": "iShares Latin America 40 ETF",
+    "aum": 3843521792,
+    "mer": 0.47,
+    "inceptionDate": "2001-10-25"
+  },
+  {
+    "ticker": "SMLF",
+    "yahooSymbol": "SMLF",
+    "name": "iShares U.S. Small-Cap Equity Factor ETF",
+    "aum": 4042218752,
+    "mer": 0.15,
+    "inceptionDate": "2015-04-28"
+  },
+  {
+    "ticker": "SUSA",
+    "yahooSymbol": "SUSA",
+    "name": "iShares ESG Optimized MSCI USA ETF",
+    "aum": 4039776000,
+    "mer": 0.25,
+    "inceptionDate": "2005-01-24"
+  },
+  {
+    "ticker": "IMCG",
+    "yahooSymbol": "IMCG",
+    "name": "iShares Morningstar Mid-Cap Growth ETF",
+    "aum": 4000648960,
+    "mer": 0.06,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "IYH",
+    "yahooSymbol": "IYH",
+    "name": "iShares U.S. Healthcare ETF",
+    "aum": 3964561664,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "SMMD",
+    "yahooSymbol": "SMMD",
+    "name": "iShares Russell 2500 ETF",
+    "aum": 3979522560,
+    "mer": 0.15,
+    "inceptionDate": "2017-07-06"
+  },
+  {
+    "ticker": "XT",
+    "yahooSymbol": "XT",
+    "name": "iShares Future Exponential Technologies ETF",
+    "aum": 3984048896,
+    "mer": 0.46,
+    "inceptionDate": "2015-03-19"
+  },
+  {
+    "ticker": "IFRA",
+    "yahooSymbol": "IFRA",
+    "name": "iShares U.S. Infrastructure ETF",
+    "aum": 3875609856,
+    "mer": 0.3,
+    "inceptionDate": "2018-04-03"
+  },
+  {
+    "ticker": "FXI",
+    "yahooSymbol": "FXI",
+    "name": "iShares China Large-Cap ETF",
+    "aum": 3926357504,
+    "mer": 0.73,
+    "inceptionDate": "2004-10-05"
+  },
+  {
+    "ticker": "AAXJ",
+    "yahooSymbol": "AAXJ",
+    "name": "iShares MSCI All Country Asia ex Japan ETF",
+    "aum": 3963676672,
+    "mer": 0.72,
+    "inceptionDate": "2008-08-13"
+  },
+  {
+    "ticker": "IYF",
+    "yahooSymbol": "IYF",
+    "name": "iShares U.S. Financials ETF",
+    "aum": 3750098432,
+    "mer": 0.37,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "LRGF",
+    "yahooSymbol": "LRGF",
+    "name": "iShares U.S. Equity Factor ETF",
+    "aum": 3671384320,
+    "mer": 0.08,
+    "inceptionDate": "2015-04-28"
+  },
+  {
+    "ticker": "IDEF",
+    "yahooSymbol": "IDEF",
+    "name": "iShares Defense Industrials Active ETF",
+    "aum": 3758735872,
+    "mer": 0.55,
+    "inceptionDate": "2025-05-19"
+  },
+  {
+    "ticker": "EWU",
+    "yahooSymbol": "EWU",
+    "name": "iShares MSCI United Kingdom ETF",
+    "aum": 3668140800,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "INTF",
+    "yahooSymbol": "INTF",
+    "name": "iShares International Equity Factor ETF",
+    "aum": 3698389504,
+    "mer": 0.16,
+    "inceptionDate": "2015-04-28"
+  },
+  {
+    "ticker": "IHI",
+    "yahooSymbol": "IHI",
+    "name": "iShares U.S. Medical Devices ETF",
+    "aum": 3446291712,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "GARP",
+    "yahooSymbol": "GARP",
+    "name": "iShares Trust - iShares MSCI USA Quality GARP ETF",
+    "aum": 3479953981,
+    "mer": 0.15,
+    "inceptionDate": "2020-01-14"
+  },
+  {
+    "ticker": "EUFN",
+    "yahooSymbol": "EUFN",
+    "name": "iShares MSCI Europe Financials ETF",
+    "aum": 3923030784,
+    "mer": 0.49,
+    "inceptionDate": "2010-01-20"
+  },
+  {
+    "ticker": "EEMV",
+    "yahooSymbol": "EEMV",
+    "name": "iShares MSCI Emerging Markets Min Vol Factor ETF",
+    "aum": 3577220096,
+    "mer": 0.25,
+    "inceptionDate": "2011-10-18"
+  },
+  {
+    "ticker": "IWX",
+    "yahooSymbol": "IWX",
+    "name": "iShares Russell Top 200 Value ETF",
+    "aum": 3666966016,
+    "mer": 0.2,
+    "inceptionDate": "2009-09-22"
+  },
+  {
+    "ticker": "ACWV",
+    "yahooSymbol": "ACWV",
+    "name": "iShares MSCI Global Min Vol Factor ETF",
+    "aum": 3280909824,
+    "mer": 0.2,
+    "inceptionDate": "2011-10-18"
+  },
+  {
+    "ticker": "ILCG",
+    "yahooSymbol": "ILCG",
+    "name": "iShares Morningstar Growth ETF",
+    "aum": 3211002624,
+    "mer": 0.04,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "IXC",
+    "yahooSymbol": "IXC",
+    "name": "iShares Global Energy ETF",
+    "aum": 2982473984,
+    "mer": 0.37,
+    "inceptionDate": "2001-11-12"
+  },
+  {
+    "ticker": "BDYN",
+    "yahooSymbol": "BDYN",
+    "name": "iShares Dynamic Equity Active ETF",
+    "aum": 3105985280,
+    "mer": 0.39,
+    "inceptionDate": "2017-06-01"
+  },
+  {
+    "ticker": "IYY",
+    "yahooSymbol": "IYY",
+    "name": "iShares Dow Jones U.S. ETF",
+    "aum": 3020395264,
+    "mer": 0.2,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "USCL",
+    "yahooSymbol": "USCL",
+    "name": "Ishares Climate Conscious & Transition MSCI USA ETF",
+    "aum": 2857747200,
+    "mer": 0.08,
+    "inceptionDate": "2023-06-06"
+  },
+  {
+    "ticker": "EWL",
+    "yahooSymbol": "EWL",
+    "name": "iShares MSCI Switzerland ETF",
+    "aum": 2669902336,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "IPAC",
+    "yahooSymbol": "IPAC",
+    "name": "iShares Core MSCI Pacific ETF",
+    "aum": 2762223616,
+    "mer": 0.09,
+    "inceptionDate": "2014-06-10"
+  },
+  {
+    "ticker": "ESML",
+    "yahooSymbol": "ESML",
+    "name": "iShares ESG Aware MSCI USA Small-Cap ETF",
+    "aum": 2717265152,
+    "mer": 0.17,
+    "inceptionDate": "2018-04-10"
+  },
+  {
+    "ticker": "PABU",
+    "yahooSymbol": "PABU",
+    "name": "iShares Paris-Aligned Climate Optimized MSCI USA ETF",
+    "aum": 2461301504,
+    "mer": 0.1,
+    "inceptionDate": "2022-02-08"
+  },
+  {
+    "ticker": "PICK",
+    "yahooSymbol": "PICK",
+    "name": "iShares MSCI Global Metals & Mining Producers ETF",
+    "aum": 2400181760,
+    "mer": 0.39,
+    "inceptionDate": "2012-01-31"
+  },
+  {
+    "ticker": "ITB",
+    "yahooSymbol": "ITB",
+    "name": "iShares U.S. Home Construction ETF",
+    "aum": 2383579392,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "RING",
+    "yahooSymbol": "RING",
+    "name": "iShares MSCI Global Gold Miners ETF",
+    "aum": 2312518656,
+    "mer": 0.39,
+    "inceptionDate": "2012-01-31"
+  },
+  {
+    "ticker": "EWP",
+    "yahooSymbol": "EWP",
+    "name": "iShares MSCI Spain ETF",
+    "aum": 2380814592,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "IWL",
+    "yahooSymbol": "IWL",
+    "name": "iShares Russell Top 200 ETF",
+    "aum": 2233981696,
+    "mer": 0.15,
+    "inceptionDate": "2009-09-22"
+  },
+  {
+    "ticker": "IYG",
+    "yahooSymbol": "IYG",
+    "name": "iShares U.S. Financial Services ETF",
+    "aum": 2086232704,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "EPP",
+    "yahooSymbol": "EPP",
+    "name": "iShares MSCI Pacific ex Japan ETF",
+    "aum": 2218631936,
+    "mer": 0.47,
+    "inceptionDate": "2001-10-25"
+  },
+  {
+    "ticker": "ICLN",
+    "yahooSymbol": "ICLN",
+    "name": "iShares Global Clean Energy ETF",
+    "aum": 2225109248,
+    "mer": 0.38,
+    "inceptionDate": "2008-06-24"
+  },
+  {
+    "ticker": "BFLX",
+    "yahooSymbol": "BFLX",
+    "name": "iShares Flexible Equity Active ETF",
+    "aum": 2139907456,
+    "mer": 0.4,
+    "inceptionDate": "2026-05-19"
+  },
+  {
+    "ticker": "DIVB",
+    "yahooSymbol": "DIVB",
+    "name": "iShares Core Dividend ETF",
+    "aum": 1976186368,
+    "mer": 0.05,
+    "inceptionDate": "2017-11-07"
+  },
+  {
+    "ticker": "IYT",
+    "yahooSymbol": "IYT",
+    "name": "iShares Transportation Average ETF",
+    "aum": 1884928640,
+    "mer": 0.37,
+    "inceptionDate": "2003-10-06"
+  },
+  {
+    "ticker": "IYJ",
+    "yahooSymbol": "IYJ",
+    "name": "iShares U.S. Industrials ETF",
+    "aum": 1978592128,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "EMGF",
+    "yahooSymbol": "EMGF",
+    "name": "iShares Emerging Markets Equity Factor ETF",
+    "aum": 1933543808,
+    "mer": 0.26,
+    "inceptionDate": "2015-12-08"
+  },
+  {
+    "ticker": "EUSA",
+    "yahooSymbol": "EUSA",
+    "name": "iShares MSCI USA Equal Weighted ETF",
+    "aum": 1871069952,
+    "mer": 0.09,
+    "inceptionDate": "2010-05-05"
+  },
+  {
+    "ticker": "BDVL",
+    "yahooSymbol": "BDVL",
+    "name": "iShares Disciplined Volatility Equity Active ETF",
+    "aum": 1734337792,
+    "mer": 0.39,
+    "inceptionDate": "2017-06-01"
+  },
+  {
+    "ticker": "IYE",
+    "yahooSymbol": "IYE",
+    "name": "iShares U.S. Energy ETF",
+    "aum": 1634599424,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "IMCB",
+    "yahooSymbol": "IMCB",
+    "name": "iShares Morningstar Mid-Cap ETF",
+    "aum": 1652427520,
+    "mer": 0.04,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "IYK",
+    "yahooSymbol": "IYK",
+    "name": "iShares US Consumer Staples ETF",
+    "aum": 1594205440,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "IEV",
+    "yahooSymbol": "IEV",
+    "name": "iShares Europe ETF",
+    "aum": 1589916288,
+    "mer": 0.6,
+    "inceptionDate": "2000-07-25"
+  },
+  {
+    "ticker": "IHE",
+    "yahooSymbol": "IHE",
+    "name": "iShares U.S. Pharmaceuticals ETF",
+    "aum": 1626361728,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "EWG",
+    "yahooSymbol": "EWG",
+    "name": "iShares MSCI Germany ETF",
+    "aum": 1473391232,
+    "mer": 0.49,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "BALI",
+    "yahooSymbol": "BALI",
+    "name": "iShares U.S. Large Cap Premium Income Active ETF",
+    "aum": 1411998848,
+    "mer": 0.35,
+    "inceptionDate": "2023-09-26"
+  },
+  {
+    "ticker": "USXF",
+    "yahooSymbol": "USXF",
+    "name": "iShares ESG Advanced MSCI USA ETF",
+    "aum": 1460162816,
+    "mer": 0.1,
+    "inceptionDate": "2020-06-16"
+  },
+  {
+    "ticker": "EWW",
+    "yahooSymbol": "EWW",
+    "name": "iShares MSCI Mexico ETF",
+    "aum": 1491775360,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "EXI",
+    "yahooSymbol": "EXI",
+    "name": "iShares Global Industrials ETF",
+    "aum": 1439590016,
+    "mer": 0.38,
+    "inceptionDate": "2006-09-12"
+  },
+  {
+    "ticker": "IDU",
+    "yahooSymbol": "IDU",
+    "name": "iShares U.S. Utilities ETF",
+    "aum": 1355812992,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "ILCV",
+    "yahooSymbol": "ILCV",
+    "name": "iShares Morningstar Value ETF",
+    "aum": 1316451456,
+    "mer": 0.04,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "IHF",
+    "yahooSymbol": "IHF",
+    "name": "iShares U.S. Healthcare Providers ETF",
+    "aum": 1355022976,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "MLRG",
+    "yahooSymbol": "MLRG",
+    "name": "iShares MSCI USA ETF",
+    "aum": 1294918272,
+    "mer": 0.03,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "IYM",
+    "yahooSymbol": "IYM",
+    "name": "iShares U.S. Basic Materials ETF",
+    "aum": 1264305664,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "IWC",
+    "yahooSymbol": "IWC",
+    "name": "iShares Micro-Cap ETF",
+    "aum": 1351445248,
+    "mer": 0.6,
+    "inceptionDate": "2005-08-12"
+  },
+  {
+    "ticker": "IAI",
+    "yahooSymbol": "IAI",
+    "name": "iShares U.S. Broker-Dealers & Securities Exchanges ETF",
+    "aum": 1320137216,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "IGRO",
+    "yahooSymbol": "IGRO",
+    "name": "iShares International Dividend Growth ETF",
+    "aum": 1253669248,
+    "mer": 0.15,
+    "inceptionDate": "2016-05-17"
+  },
+  {
+    "ticker": "SUSL",
+    "yahooSymbol": "SUSL",
+    "name": "iShares ESG MSCI USA Leaders ETF",
+    "aum": 1224451840,
+    "mer": 0.1,
+    "inceptionDate": "2019-05-07"
+  },
+  {
+    "ticker": "IHAK",
+    "yahooSymbol": "IHAK",
+    "name": "iShares Cybersecurity and Tech ETF",
+    "aum": 1157649024,
+    "mer": 0.47,
+    "inceptionDate": "2019-06-11"
+  },
+  {
+    "ticker": "EWS",
+    "yahooSymbol": "EWS",
+    "name": "iShares MSCI Singapore ETF",
+    "aum": 1432984576,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "DVYE",
+    "yahooSymbol": "DVYE",
+    "name": "iShares Emerging Markets Dividend ETF",
+    "aum": 1186209536,
+    "mer": 0.49,
+    "inceptionDate": "2012-02-23"
+  },
+  {
+    "ticker": "IYC",
+    "yahooSymbol": "IYC",
+    "name": "iShares US Consumer Discretionary ETF",
+    "aum": 1166034048,
+    "mer": 0.37,
+    "inceptionDate": "2000-06-12"
+  },
+  {
+    "ticker": "CRBN",
+    "yahooSymbol": "CRBN",
+    "name": "iShares Low Carbon Optimized MSCI ACWI ETF",
+    "aum": 1163084032,
+    "mer": 0.2,
+    "inceptionDate": "2014-12-08"
+  },
+  {
+    "ticker": "EWI",
+    "yahooSymbol": "EWI",
+    "name": "iShares MSCI Italy ETF",
+    "aum": 1174365440,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "LCTU",
+    "yahooSymbol": "LCTU",
+    "name": "iShares U.S. Carbon Transition Readiness Aware Active ETF",
+    "aum": 1173287936,
+    "mer": 0.15,
+    "inceptionDate": "2021-04-06"
+  },
+  {
+    "ticker": "EWA",
+    "yahooSymbol": "EWA",
+    "name": "iShares MSCI Australia ETF",
+    "aum": 1211079808,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "EWH",
+    "yahooSymbol": "EWH",
+    "name": "iShares MSCI Hong Kong ETF",
+    "aum": 1173037184,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "KXI",
+    "yahooSymbol": "KXI",
+    "name": "iShares Global Consumer Staples ETF",
+    "aum": 1109245696,
+    "mer": 0.38,
+    "inceptionDate": "2006-09-12"
+  },
+  {
+    "ticker": "IMCV",
+    "yahooSymbol": "IMCV",
+    "name": "iShares Morningstar Mid-Cap Value ETF",
+    "aum": 1117807616,
+    "mer": 0.06,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "IYZ",
+    "yahooSymbol": "IYZ",
+    "name": "iShares U.S. Telecommunications ETF",
+    "aum": 1064708288,
+    "mer": 0.37,
+    "inceptionDate": "2000-05-22"
+  },
+  {
+    "ticker": "DMXF",
+    "yahooSymbol": "DMXF",
+    "name": "iShares ESG Advanced MSCI EAFE Index ETF",
+    "aum": 1014055616,
+    "mer": 0.12,
+    "inceptionDate": "2020-06-16"
+  },
+  {
+    "ticker": "EWD",
+    "yahooSymbol": "EWD",
+    "name": "iShares MSCI Sweden ETF",
+    "aum": 947214144,
+    "mer": 0.51,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "ISCG",
+    "yahooSymbol": "ISCG",
+    "name": "iShares Morningstar Small-Cap Growth ETF",
+    "aum": 953625856,
+    "mer": 0.06,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "ECH",
+    "yahooSymbol": "ECH",
+    "name": "iShares MSCI Chile ETF",
+    "aum": 949570880,
+    "mer": 0.59,
+    "inceptionDate": "2007-11-12"
+  },
+  {
+    "ticker": "EPOL",
+    "yahooSymbol": "EPOL",
+    "name": "iShares MSCI Poland ETF",
+    "aum": 833959936,
+    "mer": 0.59,
+    "inceptionDate": "2010-05-25"
+  },
+  {
+    "ticker": "SLVP",
+    "yahooSymbol": "SLVP",
+    "name": "iShares MSCI Global Silver and Metals Miners ETF",
+    "aum": 892937024,
+    "mer": 0.39,
+    "inceptionDate": "2012-01-31"
+  },
+  {
+    "ticker": "EEMA",
+    "yahooSymbol": "EEMA",
+    "name": "iShares MSCI Emerging Markets Asia ETF",
+    "aum": 893554624,
+    "mer": 0.49,
+    "inceptionDate": "2012-02-08"
+  },
+  {
+    "ticker": "IEO",
+    "yahooSymbol": "IEO",
+    "name": "iShares U.S. Oil & Gas Exploration & Production ETF",
+    "aum": 731945344,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "EIS",
+    "yahooSymbol": "EIS",
+    "name": "iShares MSCI Israel ETF",
+    "aum": 873998080,
+    "mer": 0.59,
+    "inceptionDate": "2008-03-26"
+  },
+  {
+    "ticker": "IGE",
+    "yahooSymbol": "IGE",
+    "name": "iShares North American Natural Resources ETF",
+    "aum": 764064384,
+    "mer": 0.37,
+    "inceptionDate": "2001-10-22"
+  },
+  {
+    "ticker": "TOPT",
+    "yahooSymbol": "TOPT",
+    "name": "iShares Top 20 U.S. Stocks ETF",
+    "aum": 708541952,
+    "mer": 0.2,
+    "inceptionDate": "2024-10-23"
+  },
+  {
+    "ticker": "EWJV",
+    "yahooSymbol": "EWJV",
+    "name": "iShares MSCI Japan Value ETF",
+    "aum": 782671040,
+    "mer": 0.15,
+    "inceptionDate": "2019-03-05"
+  },
+  {
+    "ticker": "IQQ",
+    "yahooSymbol": "IQQ",
+    "name": "iShares Nasdaq 100 ETF",
+    "aum": 597536960,
+    "mer": 0.1,
+    "inceptionDate": "2026-07-08"
+  },
+  {
+    "ticker": "IETC",
+    "yahooSymbol": "IETC",
+    "name": "iShares U.S. Tech Independence Focused ETF",
+    "aum": 719433344,
+    "mer": 0.18,
+    "inceptionDate": "2018-03-21"
+  },
+  {
+    "ticker": "SMIN",
+    "yahooSymbol": "SMIN",
+    "name": "iShares MSCI India Small-Cap ETF",
+    "aum": 733041856,
+    "mer": 0.74,
+    "inceptionDate": "2012-02-08"
+  },
+  {
+    "ticker": "XVV",
+    "yahooSymbol": "XVV",
+    "name": "iShares ESG Select Screened S&P 500 ETF",
+    "aum": 678144576,
+    "mer": 0.08,
+    "inceptionDate": "2020-09-22"
+  },
+  {
+    "ticker": "IXG",
+    "yahooSymbol": "IXG",
+    "name": "iShares Global Financials ETF",
+    "aum": 692813056,
+    "mer": 0.38,
+    "inceptionDate": "2001-11-12"
+  },
+  {
+    "ticker": "ISCF",
+    "yahooSymbol": "ISCF",
+    "name": "iShares International Small-Cap Equity Factor ETF",
+    "aum": 665021312,
+    "mer": 0.24,
+    "inceptionDate": "2015-04-28"
+  },
+  {
+    "ticker": "ISCV",
+    "yahooSymbol": "ISCV",
+    "name": "iShares Morningstar Small-Cap Value ETF",
+    "aum": 653650880,
+    "mer": 0.06,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "WSML",
+    "yahooSymbol": "WSML",
+    "name": "iShares MSCI World Small-Cap ETF",
+    "aum": 652180550,
+    "mer": 0.3,
+    "inceptionDate": "2025-04-01"
+  },
+  {
+    "ticker": "HEWJ",
+    "yahooSymbol": "HEWJ",
+    "name": "iShares Currency Hedged MSCI Japan ETF",
+    "aum": 653068480,
+    "mer": 0.49,
+    "inceptionDate": "2014-01-31"
+  },
+  {
+    "ticker": "EWN",
+    "yahooSymbol": "EWN",
+    "name": "iShares MSCI Netherlands ETF",
+    "aum": 710439872,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "IAT",
+    "yahooSymbol": "IAT",
+    "name": "iShares U.S. Regional Banks ETF",
+    "aum": 609252544,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "IXP",
+    "yahooSymbol": "IXP",
+    "name": "iShares Global Comm Services ETF",
+    "aum": 609600384,
+    "mer": 0.37,
+    "inceptionDate": "2001-11-12"
+  },
+  {
+    "ticker": "KSA",
+    "yahooSymbol": "KSA",
+    "name": "iShares MSCI Saudi Arabia ETF",
+    "aum": 588429888,
+    "mer": 0.75,
+    "inceptionDate": "2015-09-16"
+  },
+  {
+    "ticker": "HEZU",
+    "yahooSymbol": "HEZU",
+    "name": "iShares Currency Hedged MSCI Eu",
+    "aum": 569331136,
+    "mer": 0.53,
+    "inceptionDate": "2014-07-09"
+  },
+  {
+    "ticker": "EPU",
+    "yahooSymbol": "EPU",
+    "name": "iShares MSCI Peru ETF",
+    "aum": 547687808,
+    "mer": 0.59,
+    "inceptionDate": "2009-06-19"
+  },
+  {
+    "ticker": "IDGT",
+    "yahooSymbol": "IDGT",
+    "name": "iShares U.S. Digital Infrastructure and Real Estate ETF",
+    "aum": 511357408,
+    "mer": 0.37,
+    "inceptionDate": "2001-07-10"
+  },
+  {
+    "ticker": "INRO",
+    "yahooSymbol": "INRO",
+    "name": "iShares U.S. Industry Rotation Active ETF",
+    "aum": 439510272,
+    "mer": 0.42,
+    "inceptionDate": "2024-03-26"
+  },
+  {
+    "ticker": "TECB",
+    "yahooSymbol": "TECB",
+    "name": "iShares U.S. Tech Breakthrough Multisector ETF",
+    "aum": 516731072,
+    "mer": 0.3,
+    "inceptionDate": "2020-01-08"
+  },
+  {
+    "ticker": "INDY",
+    "yahooSymbol": "INDY",
+    "name": "iShares India 50 ETF",
+    "aum": 498127968,
+    "mer": 0.65,
+    "inceptionDate": "2009-11-18"
+  },
+  {
+    "ticker": "ICOP",
+    "yahooSymbol": "ICOP",
+    "name": "iShares Copper and Metals Mining ETF",
+    "aum": 467315136,
+    "mer": 0.47,
+    "inceptionDate": "2023-06-21"
+  },
+  {
+    "ticker": "EZA",
+    "yahooSymbol": "EZA",
+    "name": "iShares MSCI South Africa ETF",
+    "aum": 473792192,
+    "mer": 0.59,
+    "inceptionDate": "2003-02-03"
+  },
+  {
+    "ticker": "POWR",
+    "yahooSymbol": "POWR",
+    "name": "iShares U.S. Power Infrastructure ETF",
+    "aum": 425549696,
+    "mer": 0.39,
+    "inceptionDate": "2012-01-31"
+  },
+  {
+    "ticker": "MXI",
+    "yahooSymbol": "MXI",
+    "name": "iShares Global Materials ETF",
+    "aum": 428777536,
+    "mer": 0.37,
+    "inceptionDate": "2006-09-12"
+  },
+  {
+    "ticker": "IAK",
+    "yahooSymbol": "IAK",
+    "name": "iShares U.S. Insurance ETF",
+    "aum": 420477632,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "SIZE",
+    "yahooSymbol": "SIZE",
+    "name": "iShares MSCI USA Size Factor ETF",
+    "aum": 417452160,
+    "mer": 0.15,
+    "inceptionDate": "2013-04-16"
+  },
+  {
+    "ticker": "THD",
+    "yahooSymbol": "THD",
+    "name": "iShares MSCI Thailand ETF",
+    "aum": 420195360,
+    "mer": 0.59,
+    "inceptionDate": "2008-03-26"
+  },
+  {
+    "ticker": "XJH",
+    "yahooSymbol": "XJH",
+    "name": "iShares ESG Select Screened S&P Mid-Cap ETF",
+    "aum": 404272352,
+    "mer": 0.12,
+    "inceptionDate": "2020-09-22"
+  },
+  {
+    "ticker": "EWZS",
+    "yahooSymbol": "EWZS",
+    "name": "iShares MSCI Brazil Small-Cap ETF",
+    "aum": 234949216,
+    "mer": 0.59,
+    "inceptionDate": "2010-09-28"
+  },
+  {
+    "ticker": "EIDO",
+    "yahooSymbol": "EIDO",
+    "name": "iShares MSCI Indonesia ETF",
+    "aum": 417084992,
+    "mer": 0.59,
+    "inceptionDate": "2010-05-05"
+  },
+  {
+    "ticker": "EVUS",
+    "yahooSymbol": "EVUS",
+    "name": "Ishares ESG Aware MSCI USA Value ETF",
+    "aum": 376930624,
+    "mer": 0.18,
+    "inceptionDate": "2023-01-31"
+  },
+  {
+    "ticker": "EEMS",
+    "yahooSymbol": "EEMS",
+    "name": "iShares MSCI Emerging Markets Small-Cap ETF",
+    "aum": 383848384,
+    "mer": 0.72,
+    "inceptionDate": "2011-08-16"
+  },
+  {
+    "ticker": "BIDD",
+    "yahooSymbol": "BIDD",
+    "name": "iShares International Dividend Active ETF",
+    "aum": 392211136,
+    "mer": 0.6,
+    "inceptionDate": "1997-09-26"
+  },
+  {
+    "ticker": "EFNL",
+    "yahooSymbol": "EFNL",
+    "name": "iShares MSCI Finland ETF",
+    "aum": 396097312,
+    "mer": 0.53,
+    "inceptionDate": "2012-01-25"
+  },
+  {
+    "ticker": "JXI",
+    "yahooSymbol": "JXI",
+    "name": "iShares Global Utilities ETF",
+    "aum": 368855424,
+    "mer": 0.37,
+    "inceptionDate": "2006-09-12"
+  },
+  {
+    "ticker": "QTOP",
+    "yahooSymbol": "QTOP",
+    "name": "iShares Nasdaq Top 30 Stocks ETF",
+    "aum": 327724000,
+    "mer": 0.2,
+    "inceptionDate": "2024-10-23"
+  },
+  {
+    "ticker": "BLCV",
+    "yahooSymbol": "BLCV",
+    "name": "iShares Large Cap Value Active ETF",
+    "aum": 337699040,
+    "mer": 0.46,
+    "inceptionDate": "2023-05-19"
+  },
+  {
+    "ticker": "IVVW",
+    "yahooSymbol": "IVVW",
+    "name": "iShares S&P 500 BuyWrite ETF",
+    "aum": 350562976,
+    "mer": 0.25,
+    "inceptionDate": "2024-03-14"
+  },
+  {
+    "ticker": "AQLT",
+    "yahooSymbol": "AQLT",
+    "name": "iShares MSCI Global Quality Factor ETF",
+    "aum": 337157920,
+    "mer": 0.2,
+    "inceptionDate": "2024-12-11"
+  },
+  {
+    "ticker": "HAWX",
+    "yahooSymbol": "HAWX",
+    "name": "iShares Currency Hedged MSCI ACWI ex U.S. ETF",
+    "aum": 345550880,
+    "mer": 0.35,
+    "inceptionDate": "2015-06-29"
+  },
+  {
+    "ticker": "IEZ",
+    "yahooSymbol": "IEZ",
+    "name": "iShares U.S. Oil Equipment & Services ETF",
+    "aum": 347331680,
+    "mer": 0.37,
+    "inceptionDate": "2006-05-01"
+  },
+  {
+    "ticker": "EWQ",
+    "yahooSymbol": "EWQ",
+    "name": "iShares MSCI France ETF",
+    "aum": 340986400,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "ISVL",
+    "yahooSymbol": "ISVL",
+    "name": "iShares International Developed Small Cap Value Factor ETF",
+    "aum": 333535136,
+    "mer": 0.31,
+    "inceptionDate": "2021-03-23"
+  },
+  {
+    "ticker": "PABD",
+    "yahooSymbol": "PABD",
+    "name": "iShares Paris-Aligned Climate Optimized MSCI World ex USA ETF",
+    "aum": 322746912,
+    "mer": 0.12,
+    "inceptionDate": "2024-01-17"
+  },
+  {
+    "ticker": "IDNA",
+    "yahooSymbol": "IDNA",
+    "name": "iShares Genomics Immunology and Healthcare ETF",
+    "aum": 298977728,
+    "mer": 0.47,
+    "inceptionDate": "2019-06-11"
+  },
+  {
+    "ticker": "LCTD",
+    "yahooSymbol": "LCTD",
+    "name": "iShares World ex U.S. Carbon Transition Readiness Aware Active ETF",
+    "aum": 311973312,
+    "mer": 0.22,
+    "inceptionDate": "2021-04-06"
+  },
+  {
+    "ticker": "UAE",
+    "yahooSymbol": "UAE",
+    "name": "iShares MSCI UAE ETF",
+    "aum": 325482528,
+    "mer": 0.59,
+    "inceptionDate": "2014-04-29"
+  },
+  {
+    "ticker": "RXI",
+    "yahooSymbol": "RXI",
+    "name": "iShares Global Consumer Discretionary ETF",
+    "aum": 296340800,
+    "mer": 0.37,
+    "inceptionDate": "2006-09-12"
+  },
+  {
+    "ticker": "HEEM",
+    "yahooSymbol": "HEEM",
+    "name": "iShares Currency Hedged MSCI Emerging Markets ETF",
+    "aum": 298126656,
+    "mer": 0.72,
+    "inceptionDate": "2014-09-23"
+  },
+  {
+    "ticker": "ENOR",
+    "yahooSymbol": "ENOR",
+    "name": "iShares MSCI Norway ETF",
+    "aum": 222961216,
+    "mer": 0.53,
+    "inceptionDate": "2012-01-23"
+  },
+  {
+    "ticker": "SMMV",
+    "yahooSymbol": "SMMV",
+    "name": "iShares MSCI USA Small-Cap Min Vol Factor ETF",
+    "aum": 266704208,
+    "mer": 0.2,
+    "inceptionDate": "2016-09-07"
+  },
+  {
+    "ticker": "MSML",
+    "yahooSymbol": "MSML",
+    "name": "iShares MSCI USA Small-Cap ETF",
+    "aum": 270191936,
+    "mer": 0.04,
+    "inceptionDate": "2004-06-28"
+  },
+  {
+    "ticker": "HSCZ",
+    "yahooSymbol": "HSCZ",
+    "name": "iShares Currency Hedged MSCI EAFE Small-Cap ETF",
+    "aum": 258801856,
+    "mer": 0.43,
+    "inceptionDate": "2015-06-29"
+  },
+  {
+    "ticker": "IDRV",
+    "yahooSymbol": "IDRV",
+    "name": "iShares Self-Driving EV and Tech ETF",
+    "aum": 260009392,
+    "mer": 0.48,
+    "inceptionDate": "2019-04-16"
+  },
+  {
+    "ticker": "WOOD",
+    "yahooSymbol": "WOOD",
+    "name": "iShares Global Timber & Forestry ETF",
+    "aum": 257918400,
+    "mer": 0.39,
+    "inceptionDate": "2008-06-24"
+  },
+  {
+    "ticker": "EWM",
+    "yahooSymbol": "EWM",
+    "name": "iShares MSCI Malaysia ETF",
+    "aum": 288219520,
+    "mer": 0.5,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "TOK",
+    "yahooSymbol": "TOK",
+    "name": "iShares MSCI Kokusai ETF",
+    "aum": 236916144,
+    "mer": 0.25,
+    "inceptionDate": "2007-12-10"
+  },
+  {
+    "ticker": "SCJ",
+    "yahooSymbol": "SCJ",
+    "name": "iShares MSCI Japan Small-Cap ETF",
+    "aum": 242005776,
+    "mer": 0.5,
+    "inceptionDate": "2007-12-20"
+  },
+  {
+    "ticker": "EWK",
+    "yahooSymbol": "EWK",
+    "name": "iShares MSCI Belgium ETF",
+    "aum": 239642736,
+    "mer": 0.49,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "AIBF",
+    "yahooSymbol": "AIBF",
+    "name": "iShares Future AI Beneficiaries ETF",
+    "aum": 218837408,
+    "mer": 0.4,
+    "inceptionDate": "2026-09-22"
+  },
+  {
+    "ticker": "XJR",
+    "yahooSymbol": "XJR",
+    "name": "iShares ESG Select Screened S&P Small-Cap ETF",
+    "aum": 202421920,
+    "mer": 0.12,
+    "inceptionDate": "2020-09-22"
+  },
+  {
+    "ticker": "GLOF",
+    "yahooSymbol": "GLOF",
+    "name": "iShares Global Equity Factor ETF",
+    "aum": 196728096,
+    "mer": 0.2,
+    "inceptionDate": "2015-04-28"
+  },
+  {
+    "ticker": "CNYA",
+    "yahooSymbol": "CNYA",
+    "name": "iShares MSCI China A ETF",
+    "aum": 200125072,
+    "mer": 0.6,
+    "inceptionDate": "2016-06-13"
+  },
+  {
+    "ticker": "IVVM",
+    "yahooSymbol": "IVVM",
+    "name": "iShares Large Cap Moderate Quarterly Laddered ETF",
+    "aum": 187290304,
+    "mer": 0.5,
+    "inceptionDate": "2023-06-28"
+  },
+  {
+    "ticker": "EDEN",
+    "yahooSymbol": "EDEN",
+    "name": "iShares MSCI Denmark ETF",
+    "aum": 180182080,
+    "mer": 0.53,
+    "inceptionDate": "2012-01-25"
+  },
+  {
+    "ticker": "EWO",
+    "yahooSymbol": "EWO",
+    "name": "iShares MSCI Austria ETF",
+    "aum": 192122656,
+    "mer": 0.49,
+    "inceptionDate": "1996-03-12"
+  },
+  {
+    "ticker": "EMXF",
+    "yahooSymbol": "EMXF",
+    "name": "iShares ESG Advanced MSCI EM ETF",
+    "aum": 171047072,
+    "mer": 0.16,
+    "inceptionDate": "2020-10-06"
+  },
+  {
+    "ticker": "VEGI",
+    "yahooSymbol": "VEGI",
+    "name": "iShares MSCI Agriculture Producers ETF",
+    "aum": 170264288,
+    "mer": 0.39,
+    "inceptionDate": "2012-01-31"
+  },
+  {
+    "ticker": "MAXJ",
+    "yahooSymbol": "MAXJ",
+    "name": "iShares Large Cap Max Buffer Jun ETF",
+    "aum": 163857520,
+    "mer": 0.5,
+    "inceptionDate": "2024-06-28"
+  },
+  {
+    "ticker": "TUR",
+    "yahooSymbol": "TUR",
+    "name": "iShares MSCI Turkey ETF",
+    "aum": 163325248,
+    "mer": 0.59,
+    "inceptionDate": "2008-03-26"
+  },
+  {
+    "ticker": "IEUS",
+    "yahooSymbol": "IEUS",
+    "name": "iShares MSCI Europe Small-Cap ETF",
+    "aum": 172193200,
+    "mer": 0.41,
+    "inceptionDate": "2007-11-12"
+  },
+  {
+    "ticker": "SDG",
+    "yahooSymbol": "SDG",
+    "name": "iShares MSCI Global Sustainable Development Goals ETF",
+    "aum": 161888672,
+    "mer": 0.5,
+    "inceptionDate": "2016-04-20"
+  },
+  {
+    "ticker": "SVAL",
+    "yahooSymbol": "SVAL",
+    "name": "iShares US Small Cap Value Factor ETF",
+    "aum": 154797360,
+    "mer": 0.2,
+    "inceptionDate": "2020-10-27"
+  },
+  {
+    "ticker": "EPHE",
+    "yahooSymbol": "EPHE",
+    "name": "iShares MSCI Philippines ETF",
+    "aum": 134157192,
+    "mer": 0.59,
+    "inceptionDate": "2010-09-28"
+  },
+  {
+    "ticker": "IVVB",
+    "yahooSymbol": "IVVB",
+    "name": "iShares Large Cap Deep Quarterly Laddered ETF",
+    "aum": 131495976,
+    "mer": 0.5,
+    "inceptionDate": "2023-06-28"
+  },
+  {
+    "ticker": "JPXN",
+    "yahooSymbol": "JPXN",
+    "name": "iShares JPX-Nikkei 400 ETF",
+    "aum": 139761216,
+    "mer": 0.48,
+    "inceptionDate": "2001-10-23"
+  },
+  {
+    "ticker": "DMAX",
+    "yahooSymbol": "DMAX",
+    "name": "iShares Large Cap Max Buffer Dec ETF",
+    "aum": 136822048,
+    "mer": 0.5,
+    "inceptionDate": "2024-12-31"
+  },
+  {
+    "ticker": "SMAX",
+    "yahooSymbol": "SMAX",
+    "name": "iShares Large Cap Max Buffer Sep ETF",
+    "aum": 89818344,
+    "mer": 0.5,
+    "inceptionDate": "2024-09-30"
+  },
+  {
+    "ticker": "BILT",
+    "yahooSymbol": "BILT",
+    "name": "iShares Infrastructure Active ETF",
+    "aum": 110627800,
+    "mer": 0.6,
+    "inceptionDate": "2025-07-29"
+  },
+  {
+    "ticker": "IDYN",
+    "yahooSymbol": "IDYN",
+    "name": "iShares International Equity Factor Rotation Active ETF",
+    "aum": 107469072,
+    "mer": 0.45,
+    "inceptionDate": "2025-08-05"
+  },
+  {
+    "ticker": "IBLC",
+    "yahooSymbol": "IBLC",
+    "name": "iShares Blockchain and Tech ETF",
+    "aum": 82278848,
+    "mer": 0.47,
+    "inceptionDate": "2022-04-25"
+  },
+  {
+    "ticker": "EIRL",
+    "yahooSymbol": "EIRL",
+    "name": "iShares MSCI Ireland ETF",
+    "aum": 77674928,
+    "mer": 0.5,
+    "inceptionDate": "2010-05-05"
+  },
+  {
+    "ticker": "MMAX",
+    "yahooSymbol": "MMAX",
+    "name": "iShares Large Cap Max Buffer Mar ETF",
+    "aum": 73619808,
+    "mer": 0.5,
+    "inceptionDate": "2025-03-31"
+  },
+  {
+    "ticker": "DVYA",
+    "yahooSymbol": "DVYA",
+    "name": "iShares Asia/Pacific Dividend ETF",
+    "aum": 70059256,
+    "mer": 0.49,
+    "inceptionDate": "2012-02-23"
+  },
+  {
+    "ticker": "TEND",
+    "yahooSymbol": "TEND",
+    "name": "Ishares Large Cap 10% Target Buffer Dec ETF",
+    "aum": 71630800,
+    "mer": 0.5,
+    "inceptionDate": "2025-10-08"
+  },
+  {
+    "ticker": "BKF",
+    "yahooSymbol": "BKF",
+    "name": "iShares MSCI BIC ETF",
+    "aum": 66397772,
+    "mer": 0.72,
+    "inceptionDate": "2007-11-12"
+  },
+  {
+    "ticker": "ENZL",
+    "yahooSymbol": "ENZL",
+    "name": "iShares MSCI New Zealand ETF",
+    "aum": 65769056,
+    "mer": 0.5,
+    "inceptionDate": "2010-09-01"
+  },
+  {
+    "ticker": "KWT",
+    "yahooSymbol": "KWT",
+    "name": "iShares MSCI Kuwait ETF",
+    "aum": 66416060,
+    "mer": 0.75,
+    "inceptionDate": "2020-09-01"
+  },
+  {
+    "ticker": "IBAT",
+    "yahooSymbol": "IBAT",
+    "name": "iShares Energy Storage & Materials ETF",
+    "aum": 62872084,
+    "mer": 0.47,
+    "inceptionDate": "2024-03-19"
+  },
+  {
+    "ticker": "ECNS",
+    "yahooSymbol": "ECNS",
+    "name": "iShares MSCI China Small-Cap ETF",
+    "aum": 63135084,
+    "mer": 0.59,
+    "inceptionDate": "2010-09-28"
+  },
+  {
+    "ticker": "MADE",
+    "yahooSymbol": "MADE",
+    "name": "iShares U.S. Manufacturing ETF",
+    "aum": 58266516,
+    "mer": 0.4,
+    "inceptionDate": "2024-07-17"
+  },
+  {
+    "ticker": "IWMW",
+    "yahooSymbol": "IWMW",
+    "name": "iShares Russell 2000 BuyWrite ETF",
+    "aum": 55830824,
+    "mer": 0.39,
+    "inceptionDate": "2024-03-14"
+  },
+  {
+    "ticker": "QAT",
+    "yahooSymbol": "QAT",
+    "name": "iShares MSCI Qatar ETF",
+    "aum": 56202196,
+    "mer": 0.6,
+    "inceptionDate": "2014-04-29"
+  },
+  {
+    "ticker": "TENJ",
+    "yahooSymbol": "TENJ",
+    "name": "ishares Large Cap 10% Target Buffer Jun ETF",
+    "aum": 49655144,
+    "mer": 0.5,
+    "inceptionDate": "2025-10-21"
+  },
+  {
+    "ticker": "TENM",
+    "yahooSymbol": "TENM",
+    "name": "ishares Large Cap 10% Target Buffer Mar ETF",
+    "aum": 46634216,
+    "mer": 0.5,
+    "inceptionDate": "2025-10-21"
+  },
+  {
+    "ticker": "TEK",
+    "yahooSymbol": "TEK",
+    "name": "iShares Technology Opportunities Active ETF",
+    "aum": 43699792,
+    "mer": 0.75,
+    "inceptionDate": "2024-10-21"
+  },
+  {
+    "ticker": "TCHI",
+    "yahooSymbol": "TCHI",
+    "name": "iShares MSCI China Multisector Tech ETF",
+    "aum": 41059352,
+    "mer": 0.59,
+    "inceptionDate": "2022-01-25"
+  },
+  {
+    "ticker": "STEN",
+    "yahooSymbol": "STEN",
+    "name": "iShares Large Cap 10% Target Buffer Sep ETF",
+    "aum": 38589300,
+    "mer": 0.5,
+    "inceptionDate": "2025-09-30"
+  },
+  {
+    "ticker": "EWUS",
+    "yahooSymbol": "EWUS",
+    "name": "iShares MSCI United Kingdom Small-Cap ETF",
+    "aum": 41702208,
+    "mer": 0.59,
+    "inceptionDate": "2012-01-25"
+  },
+  {
+    "ticker": "BALQ",
+    "yahooSymbol": "BALQ",
+    "name": "iShares Nasdaq Premium Income Active ETF",
+    "aum": 33084664,
+    "mer": 0.35,
+    "inceptionDate": "2025-12-02"
+  },
+  {
+    "ticker": "TOPC",
+    "yahooSymbol": "TOPC",
+    "name": "iShares S&P 500 3% Capped ETF",
+    "aum": 32810410,
+    "mer": 0.09,
+    "inceptionDate": "2025-04-15"
+  },
+  {
+    "ticker": "LDEM",
+    "yahooSymbol": "LDEM",
+    "name": "iShares ESG MSCI EM Leaders ETF",
+    "aum": 33324186,
+    "mer": 0.16,
+    "inceptionDate": "2020-02-05"
+  },
+  {
+    "ticker": "EGUS",
+    "yahooSymbol": "EGUS",
+    "name": "Ishares ESG Aware MSCI USA Growth ETF",
+    "aum": 28319936,
+    "mer": 0.18,
+    "inceptionDate": "2023-01-31"
+  },
+  {
+    "ticker": "QNXT",
+    "yahooSymbol": "QNXT",
+    "name": "iShares Nasdaq-100 ex Top 30 ETF",
+    "aum": 27711428,
+    "mer": 0.2,
+    "inceptionDate": "2024-10-23"
+  },
+  {
+    "ticker": "TWOX",
+    "yahooSymbol": "TWOX",
+    "name": "iShares Large Cap Accelerated Outcome ETF",
+    "aum": 24130552,
+    "mer": 0.5,
+    "inceptionDate": "2025-01-15"
+  },
+  {
+    "ticker": "XOEF",
+    "yahooSymbol": "XOEF",
+    "name": "iShares S&P 500 ex S&P 100 ETF",
+    "aum": 22083060,
+    "mer": 0.2,
+    "inceptionDate": "2025-07-08"
+  },
+  {
+    "ticker": "ENHI",
+    "yahooSymbol": "ENHI",
+    "name": "Ishares Enhanced International Active ETF",
+    "aum": 21316600,
+    "mer": 0.27,
+    "inceptionDate": "2026-03-10"
+  },
+  {
+    "ticker": "EVLU",
+    "yahooSymbol": "EVLU",
+    "name": "iShares MSCI Emerging Markets Value Factor ETF",
+    "aum": 19673152,
+    "mer": 0.35,
+    "inceptionDate": "2024-09-04"
+  },
+  {
+    "ticker": "TEXN",
+    "yahooSymbol": "TEXN",
+    "name": "iShares Texas Equity ETF",
+    "aum": 18405694,
+    "mer": 0.2,
+    "inceptionDate": "2025-06-23"
+  },
+  {
+    "ticker": "EMIF",
+    "yahooSymbol": "EMIF",
+    "name": "iShares Emerging Markets Infrastructure ETF",
+    "aum": 13232642,
+    "mer": 0.6,
+    "inceptionDate": "2009-06-16"
+  },
+  {
+    "ticker": "BMED",
+    "yahooSymbol": "BMED",
+    "name": "iShares Health Innovation Active ETF",
+    "aum": 13798736,
+    "mer": 0.55,
+    "inceptionDate": "2020-09-29"
+  },
+  {
+    "ticker": "EQLT",
+    "yahooSymbol": "EQLT",
+    "name": "iShares MSCI Emerging Markets Quality Factor ETF",
+    "aum": 11996664,
+    "mer": 0.35,
+    "inceptionDate": "2024-09-04"
+  },
+  {
+    "ticker": "ILIT",
+    "yahooSymbol": "ILIT",
+    "name": "Ishares Lithium Miners And Producers ETF",
+    "aum": 12669648,
+    "mer": 0.47,
+    "inceptionDate": "2023-06-21"
+  },
+  {
+    "ticker": "ENHU",
+    "yahooSymbol": "ENHU",
+    "name": "iShares Enhanced Large Cap Core Active ETF",
+    "aum": 10806091,
+    "mer": 0.22,
+    "inceptionDate": "2025-11-04"
+  },
+  {
+    "ticker": "ENHE",
+    "yahooSymbol": "ENHE",
+    "name": "iShares Enhanced Emerging Markets Active ETF",
+    "aum": 9654968,
+    "mer": 0.35,
+    "inceptionDate": "2026-09-29"
+  },
+  {
+    "ticker": "BGRO",
+    "yahooSymbol": "BGRO",
+    "name": "iShares Large Cap Growth Active ETF",
+    "aum": 10140532,
+    "mer": 0.55,
+    "inceptionDate": "2024-06-04"
+  },
+  {
+    "ticker": "BPAY",
+    "yahooSymbol": "BPAY",
+    "name": "iShares FinTech Active ETF",
+    "aum": 8841430,
+    "mer": 0.55,
+    "inceptionDate": "2022-08-16"
+  },
+  {
+    "ticker": "ESMV",
+    "yahooSymbol": "ESMV",
+    "name": "iShares ESG Optimized MSCI USA Min Vol Factor ETF",
+    "aum": 7664095,
+    "mer": 0.18,
+    "inceptionDate": "2021-11-02"
+  },
+  {
+    "ticker": "SQLT",
+    "yahooSymbol": "SQLT",
+    "name": "Ishares MSCI USA Small-Cap Quality Factor ETF",
+    "aum": 6617895,
+    "mer": 0.2,
+    "inceptionDate": "2026-03-31"
+  },
+  {
+    "ticker": "IBRN",
+    "yahooSymbol": "IBRN",
+    "name": "iShares Neuroscience and Healthcare ETF",
+    "aum": 6647455,
+    "mer": 0.47,
+    "inceptionDate": "2022-08-24"
+  },
+  {
+    "ticker": "EFRA",
+    "yahooSymbol": "EFRA",
+    "name": "iShares Environmental Infrastructure and Industrials ETF",
+    "aum": 5454253,
+    "mer": 0.47,
+    "inceptionDate": "2022-11-01"
+  },
+  {
+    "ticker": "ETEC",
+    "yahooSymbol": "ETEC",
+    "name": "iShares Breakthrough Environmental Solutions ETF",
+    "aum": 3871572,
+    "mer": 0.47,
+    "inceptionDate": "2023-03-28"
+  }
+]

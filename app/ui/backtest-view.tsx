@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CirclePlus, Download, GripVertical, Minus, Play, Plus, Trash2, X } from "lucide-react";
 import { ChartHover } from "./chart-hover";
 import { BacktestTickerInput } from "./backtest-ticker-input";
@@ -8,6 +8,7 @@ import { useMarketData } from "./market-data-provider";
 import { PortfolioLeverageOptions } from "./portfolio-leverage-options";
 import { combineSeries, createPortfolioBasket, indexWarning, simulateLeverage } from "../lib/leverage";
 import type { MarketSeries, PortfolioLeverageConfig, RatePoint } from "../lib/market-types";
+import type { TickerSelection } from "../lib/etf-directory";
 
 type Holding = { id: string; symbol: string; weight: number };
 type Portfolio = { id: string; name: string; color: string; holdings: Holding[]; leverage?: PortfolioLeverageConfig };
@@ -18,7 +19,7 @@ type ChartRange = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y"
 const chartRanges: ChartRange[] = ["1D", "5D", "1M", "6M", "YTD", "1Y", "3Y", "5Y", "10Y", "Max"];
 
 const colors = ["#17724a", "#266ad1", "#b35f24", "#9a3d85"];
-export function BacktestView() {
+export function BacktestView({ portfolioSelection }: { portfolioSelection?: TickerSelection } = {}) {
   const { series, loadSeries, getRiskFreeRates } = useMarketData();
   const [portfolios, setPortfolios] = useState<Portfolio[]>([
     { id: "core", name: "Portfolio", color: colors[0], holdings: [{ id: "h1", symbol: "VTI", weight: 60 }, { id: "h2", symbol: "VXUS", weight: 30 }, { id: "h3", symbol: "BND", weight: 10 }] },
@@ -42,6 +43,15 @@ export function BacktestView() {
   const leverageEdits = useRef<Record<string, PortfolioLeverageConfig>>({});
   const rateSnapshot = useRef<RatePoint[]>([]);
   const calculationVersion = useRef(0);
+  useEffect(() => {
+    if (!portfolioSelection) return;
+    const { id, symbol } = portfolioSelection;
+    // Append to the editor only. The last-run portfolios and chart stay untouched.
+    setPortfolios(items => items.some(item => item.id === id) ? items : [...items, {
+      id, name: "Portfolio", color: colors[items.length % colors.length],
+      holdings: [{ id: `${id}-holding`, symbol, weight: 100 }],
+    }]);
+  }, [portfolioSelection]);
   const displayPortfolios = useMemo(() => {
     const metadata = new Map(portfolios.map(portfolio => [portfolio.id, { name: portfolio.name, color: portfolio.color }]));
     return testedPortfolios.map(portfolio => ({ ...portfolio, ...metadata.get(portfolio.id) }));

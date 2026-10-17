@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Building2, ExternalLink, LoaderCircle, Search, TrendingUp } from "lucide-react";
 import { ChartHover } from "./chart-hover";
 import { useMarketData } from "./market-data-provider";
 import { LeverageControl } from "./leverage-control";
 import { indexWarning, maximumDrawdown, quoteForSeries } from "../lib/leverage";
 import type { HistoryPoint, MarketHistory as History, Quote } from "../lib/market-types";
+import type { TickerSelection } from "../lib/etf-directory";
 
 type Suggestion = { symbol: string; name: string; type: string; exchange: string };
 type Range = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y" | "Max";
@@ -14,7 +15,7 @@ const ranges: Range[] = ["1D", "5D", "1M", "6M", "YTD", "1Y", "3Y", "5Y", "10Y",
 
 const initial: Quote = { symbol: "VOO", name: "Vanguard S&P 500 ETF", price: 618.71, change: 2.98, changePercent: 0.48, currency: "USD", exchange: "NYSE Arca", sector: "Large Blend", industry: "Exchange Traded Fund", marketCap: 759_000_000_000, pe: 25.05, dividendYield: 1.18, fiftyTwoWeekHigh: 626.44, fiftyTwoWeekLow: 442.8, description: "Seeks to track the performance of the S&P 500 Index, representing large-capitalization companies in the United States." };
 
-export function TickerView() {
+export function TickerView({ selection }: { selection?: TickerSelection } = {}) {
   const { series, loadSeries } = useMarketData();
   const [query, setQuery] = useState("");
   const [baseQuote, setQuote] = useState<Quote>(initial);
@@ -26,6 +27,8 @@ export function TickerView() {
   const [range, setRange] = useState<Range>("1Y");
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState("");
+  const searchVersion = useRef(0);
+  const handledSelection = useRef<string | null>(null);
   const activeSeries = series[activeId];
   const history = activeSeries?.history ?? null;
   const quote = activeSeries ? quoteForSeries(activeSeries) : baseQuote;
@@ -48,8 +51,10 @@ export function TickerView() {
   const search = async (symbol = query) => {
     const requested = symbol.trim().toUpperCase();
     if (!requested) return;
+    const version = ++searchVersion.current;
     const local = series[requested] ?? Object.values(series).find(item => item.name.toUpperCase() === requested);
-    if (local?.simulation || local?.quote) { activate(local.id); return; }
+    if (local?.simulation || local?.quote) { setError(""); setLoading(false); setHistoryLoading(false); activate(local.id); return; }
+    setQuery(requested);
     setLoading(true);
     setError("");
     setSuggestions([]);
@@ -57,6 +62,7 @@ export function TickerView() {
     try {
       const response = await fetch(`/api/market/lookup?symbol=${encodeURIComponent(requested)}`);
       const payload = await response.json();
+      if (version !== searchVersion.current) return;
       if (!response.ok || payload.error) throw new Error(payload.error || "No data was found for that ticker.");
       setQuote(payload);
       setQuery(payload.symbol || requested);
@@ -64,11 +70,16 @@ export function TickerView() {
       setHistoryLoading(true); setHistoryError("");
       try {
         const loaded = await loadSeries(requested, payload);
-        setActiveId(loaded.id);
-      } catch (err) { setHistoryError(err instanceof Error ? err.message : "Unable to load price history."); }
-    } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Live data is unavailable. Check the yfinance service and try again."); }
-    finally { setLoading(false); setHistoryLoading(false); }
+        if (version === searchVersion.current) setActiveId(loaded.id);
+      } catch (err) { if (version === searchVersion.current) setHistoryError(err instanceof Error ? err.message : "Unable to load price history."); }
+    } catch (requestError) { if (version === searchVersion.current) setError(requestError instanceof Error ? requestError.message : "Live data is unavailable. Check the yfinance service and try again."); }
+    finally { if (version === searchVersion.current) { setLoading(false); setHistoryLoading(false); } }
   };
+  useEffect(() => {
+    if (!selection || handledSelection.current === selection.id) return;
+    handledSelection.current = selection.id;
+    void search(selection.symbol);
+  }, [selection]);
   const change = hasNumber(quote.change) ? quote.change : 0;
   const changePercent = hasNumber(quote.changePercent) ? quote.changePercent : 0;
   const positive = change >= 0;
