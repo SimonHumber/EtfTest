@@ -158,10 +158,12 @@ test('workspace opens ETF actions in the correct tab and preserves both mounted 
   function TickerView() {}
   function BacktestView() {}
   function EtfDirectoryView() {}
+  function IndicesView() {}
   const page = load('app/page.tsx', {
     react: h.react,
     'next/navigation': { useSearchParams: () => params, useRouter: () => ({ push(url) { pushes.push(url); params = new URL(url, 'https://atlas.example').searchParams; } }) },
     './ui/ticker-view': { TickerView }, './ui/backtest-view': { BacktestView }, './ui/etf-directory-view': { EtfDirectoryView },
+    './ui/indices-view': { IndicesView },
   });
   const Workspace = page.default().props.children.type;
   const render = () => h.render(Workspace);

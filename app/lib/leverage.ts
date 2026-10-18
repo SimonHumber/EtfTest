@@ -165,6 +165,7 @@ export function createPortfolioBasket(id: string, name: string, holdings: { seri
 export function indexWarning(series: MarketSeries | undefined, underlying?: MarketSeries) {
   const source = underlying ?? series;
   if (!source) return undefined;
+  if (source.id === "^VIX") return "Spot VIX is not an investable asset. This simulation does not represent VIX futures or a VIX futures fund.";
   if (source.id === "^GSPC") return "^GSPC excludes dividends. Consider S&P 500 Total Return (^SP500TR) for dividend-inclusive exposure.";
   if (source.id === "^NDX") return "^NDX excludes dividends. Consider Nasdaq-100 Total Return (^XNDX) for dividend-inclusive exposure.";
   if (source.history.quoteType === "INDEX") return "Index prices may exclude dividends. Use a total-return version where available.";
