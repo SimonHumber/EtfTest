@@ -13,7 +13,7 @@ export function ChartHover({ points, min, max, formatValue }: { points: ChartPoi
     year: "numeric", month: "short", day: "numeric", ...(value.includes("T") ? { hour: "numeric", minute: "2-digit" } as const : {}),
   });
 
-  return <div className="absolute inset-0 cursor-crosshair touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+  return <div className="absolute inset-0 select-none cursor-crosshair touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
     role="slider" tabIndex={0} aria-label="Chart timeline" aria-valuemin={0} aria-valuemax={Math.max(points.length - 1, 0)} aria-valuenow={index ?? 0}
     aria-valuetext={point ? `${describeDate(point.date)}, ${point.values.map(item => `${item.name}: ${formatValue(item.value)}`).join(", ")}` : undefined}
     onPointerMove={event => {

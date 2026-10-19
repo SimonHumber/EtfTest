@@ -196,6 +196,21 @@ test('both backtest pages commit negative cash flows and reject incomplete amoun
   }
 });
 
+test('percentage recurring cash flows recalculate each comparison locally', async () => {
+  const app = setup();
+  app.editor().onAdd('^GSPC', [1, 3]); await app.run();
+  const unit = () => elements(app.render(), el => el.props?.['aria-label'] === 'Recurring cash flow unit')[0];
+  const amount = () => elements(app.render(), el => el.props?.['aria-label'] === 'Cash flow amount')[1];
+  assert.equal(unit().props.value, 'dollars');
+  amount().props.onChange({ target: { value: '-5' } });
+  amount().props.onBlur();
+  unit().props.onChange({ target: { value: 'percent' } });
+  assert.equal(unit().props.value, 'percent');
+  const row = app.chart().results[0];
+  for (const portfolio of app.chart().portfolios) assert.equal(row.values[portfolio.id], 9500);
+  assert.deepEqual(app.calls, ['^GSPC']);
+});
+
 test('invalid leverage edits preserve the last valid chart and auto names follow valid edits', async () => {
   const app = setup();
   app.editor().onAdd('^NDX', [3]); await app.run();

@@ -13,7 +13,7 @@ import { IndexComparisonEditor } from "./index-comparison-editor";
 import { indexComparisonKey, indexComparisonName, indexLeverage, type IndexListing } from "../lib/index-directory";
 import type { Holding, Portfolio } from "../lib/backtest-types";
 
-type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; date: string; startAtBeginning?: boolean; frequency?: "monthly" | "weekly" | "quarterly" | "annual" };
+type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; amountType?: "dollars" | "percent"; date: string; startAtBeginning?: boolean; frequency?: "monthly" | "weekly" | "quarterly" | "annual" };
 type Result = { date: string; values: Record<string, number>; contributions: number; appliedContributions?: Record<string, number> };
 type PriceRow = { date: string; prices: Record<string, number> };
 type ChartRange = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y" | "Max";
@@ -154,8 +154,8 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
     return [indexWarning(item, series[item.simulation.underlyingId]), item.simulation.coverageWarning].filter((warning): warning is string => Boolean(warning));
   })))];
   const exportResults = () => {
-    const header = ["Date", ...displayPortfolios.map(portfolio => portfolio.name), "Cash flow"];
-    const rows = results.map(row => [row.date, ...displayPortfolios.map(portfolio => (row.values[portfolio.id] ?? "").toString()), row.contributions.toString()]);
+    const header = ["Date", ...displayPortfolios.map(portfolio => portfolio.name), ...displayPortfolios.map(portfolio => `${portfolio.name} cash flow`)];
+    const rows = results.map(row => [row.date, ...displayPortfolios.map(portfolio => (row.values[portfolio.id] ?? "").toString()), ...displayPortfolios.map(portfolio => (row.appliedContributions?.[portfolio.id] ?? row.contributions).toString())]);
     const csv = [header, ...rows].map(row => row.map(value => `"${value.replaceAll('"', '""')}"`).join(",")).join("\n");
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     const link = document.createElement("a");
@@ -188,9 +188,10 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
           <div className="divide-y divide-slate-100">{flows.map(flow => <div key={flow.id} className="min-w-0 p-4">
             <div className="grid grid-cols-[minmax(0,1fr)_96px_26px] gap-2">
               <select value={flow.type} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, type: e.target.value as CashFlow["type"] } : f))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700"><option value="initial">Starting balance</option><option value="recurring">Recurring</option><option value="one-time">One-time</option></select>
-              <label className="relative"><span className="absolute left-2 top-2 text-xs text-slate-400">$</span><input type="number" step="any" aria-label="Cash flow amount" value={flowAmountDrafts[flow.id] ?? String(flow.amount)} onChange={e => setFlowAmountDrafts(items => ({ ...items, [flow.id]: e.target.value }))} onBlur={() => commitFlowAmount(flow)} className="h-8 w-full rounded border border-slate-200 pl-5 pr-1 text-right text-xs outline-none focus:border-[#397a62]"/></label>
+              <label className="relative"><span className="absolute left-2 top-2 text-xs text-slate-400">{flow.type === "recurring" && flow.amountType === "percent" ? "%" : "$"}</span><input type="number" step="any" aria-label="Cash flow amount" value={flowAmountDrafts[flow.id] ?? String(flow.amount)} onChange={e => setFlowAmountDrafts(items => ({ ...items, [flow.id]: e.target.value }))} onBlur={() => commitFlowAmount(flow)} className="h-8 w-full rounded border border-slate-200 pl-5 pr-1 text-right text-xs outline-none focus:border-[#397a62]"/></label>
               <button onClick={() => setFlows(items => items.filter(f => f.id !== flow.id))} className="text-slate-300 hover:text-rose-500"><Trash2 size={15}/></button>
             </div>
+            {flow.type === "recurring" && <div className="mt-3"><label className="flex items-center gap-2 text-xs text-slate-600">Amount in<select aria-label="Recurring cash flow unit" value={flow.amountType ?? "dollars"} onChange={event => setFlows(items => items.map(item => item.id === flow.id ? { ...item, amountType: event.target.value as CashFlow["amountType"] } : item))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs"><option value="dollars">Dollars</option><option value="percent">Percent of portfolio</option></select></label>{flow.amountType === "percent" && <p className="mt-1 text-xs leading-5 text-slate-500">Percentage per occurrence, after market returns and dollar cash flows. Use a negative percentage to withdraw.</p>}</div>}
             {flow.type === "recurring" && <label className="mt-3 flex items-start gap-2 text-xs leading-5 text-slate-600">
               <input type="checkbox" checked={flow.startAtBeginning !== false} onChange={event => {
                 const checked = event.target.checked;
@@ -266,7 +267,7 @@ function PerformanceChart({ portfolios, results, range }: { portfolios: Portfoli
   const padding = Math.max((high - low) * .08, high * .001, 1);
   const min = Math.max(0, low - padding); const max = high + padding; const width = 720; const height = 315;
   const coordinates = (portfolio: Portfolio) => results.map((row, i) => { const x = (i / Math.max(results.length - 1, 1)) * width; const y = height - ((row.values[portfolio.id] - min) / Math.max(max - min, 1)) * height; return `${x.toFixed(1)},${y.toFixed(1)}`; }).join(" ");
-  return <div className="px-5 pb-4 pt-6 sm:px-6"><div className="mb-4 flex flex-wrap gap-x-5 gap-y-2">{portfolios.map(p => <div className="flex items-center gap-2 text-xs font-medium text-slate-600" key={p.id}><span className="h-2.5 w-2.5 rounded-full" style={{background:p.color}}/>{p.name}</div>)}</div><div className="relative h-[300px] pl-20"><div className="chart-grid absolute bottom-7 left-20 right-0 top-0"/><div className="absolute bottom-7 left-0 top-0 flex flex-col justify-between text-right text-[11px] tabular-nums text-slate-400"><span>{dollars(max)}</span><span>{dollars((max + min) / 2)}</span><span>{dollars(min)}</span></div><svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="absolute left-20 top-0 h-[calc(100%-1.75rem)] w-[calc(100%-5rem)] overflow-visible">{portfolios.map(p => <polyline key={p.id} points={coordinates(p)} fill="none" stroke={p.color} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/>)}</svg><div className="absolute bottom-7 left-20 right-0 top-0"><ChartHover points={results.map(row => ({ date: row.date, values: portfolios.map(portfolio => ({ name: portfolio.name, value: row.values[portfolio.id], color: portfolio.color })) }))} min={min} max={max} formatValue={value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)}/></div><div className="absolute bottom-0 left-20 right-0 flex justify-between text-[11px] text-slate-400"><span>{labelDate(results[0]?.date, range)}</span><span>{labelDate(results[Math.floor(results.length / 2)]?.date, range)}</span><span>{labelDate(results.at(-1)?.date, range)}</span></div></div></div>;
+  return <div className="select-none px-5 pb-4 pt-6 sm:px-6"><div className="mb-4 flex flex-wrap gap-x-5 gap-y-2">{portfolios.map(p => <div className="flex items-center gap-2 text-xs font-medium text-slate-600" key={p.id}><span className="h-2.5 w-2.5 rounded-full" style={{background:p.color}}/>{p.name}</div>)}</div><div className="relative h-[300px] pl-20"><div className="chart-grid absolute bottom-7 left-20 right-0 top-0"/><div className="absolute bottom-7 left-0 top-0 flex flex-col justify-between text-right text-[11px] tabular-nums text-slate-400"><span>{dollars(max)}</span><span>{dollars((max + min) / 2)}</span><span>{dollars(min)}</span></div><svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="absolute left-20 top-0 h-[calc(100%-1.75rem)] w-[calc(100%-5rem)] overflow-visible">{portfolios.map(p => <polyline key={p.id} points={coordinates(p)} fill="none" stroke={p.color} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/>)}</svg><div className="absolute bottom-7 left-20 right-0 top-0"><ChartHover points={results.map(row => ({ date: row.date, values: portfolios.map(portfolio => ({ name: portfolio.name, value: row.values[portfolio.id], color: portfolio.color })) }))} min={min} max={max} formatValue={value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)}/></div><div className="absolute bottom-0 left-20 right-0 flex justify-between text-[11px] text-slate-400"><span>{labelDate(results[0]?.date, range)}</span><span>{labelDate(results[Math.floor(results.length / 2)]?.date, range)}</span><span>{labelDate(results.at(-1)?.date, range)}</span></div></div></div>;
 }
 function DateInput({ value, onChange }: { value: string; onChange: (value: string) => void }) { return <div className="flex h-10 items-center gap-1 rounded-md border border-slate-300 bg-white px-2"><label className="flex items-center gap-2"><CalendarDays size={15} className="text-slate-400"/><input type="date" value={value} onChange={e => onChange(e.target.value)} className="w-[112px] border-0 bg-transparent p-0 text-xs text-slate-600 outline-none"/></label>{value && <button type="button" onClick={() => onChange("")} aria-label="Clear date" title="Clear date" className="grid h-7 w-7 place-items-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700"><X size={15}/></button>}</div>; }
 function totalWeight(portfolio: Portfolio) { return portfolio.holdings.reduce((sum, h) => sum + (Number(h.weight) || 0), 0); }
@@ -289,7 +290,8 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
   if (portfolios.some(portfolio => portfolio.holdings.some(holding => holding.symbol.trim() && !symbols.has(holding.symbol.trim().toUpperCase())))) return [];
 
   const contributions = new Map<string, number>();
-  const addContribution = (date: string, amount: number) => {
+  const percentageFactors = new Map<string, number>();
+  const addContribution = (date: string, amount: number, percent = false) => {
     let low = 0;
     let high = priceHistory.length;
     while (low < high) {
@@ -298,7 +300,10 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
       else high = mid;
     }
     const row = priceHistory[low];
-    if (row) contributions.set(row.date, (contributions.get(row.date) ?? 0) + amount);
+    if (row) {
+      if (percent) percentageFactors.set(row.date, (percentageFactors.get(row.date) ?? 1) * Math.max(0, 1 + amount / 100));
+      else contributions.set(row.date, (contributions.get(row.date) ?? 0) + amount);
+    }
   };
   const lastDate = priceHistory.at(-1)!.date;
   for (const flow of flows) {
@@ -319,7 +324,7 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
     let occurrence = 0;
     const last = parseLocalDate(lastDate);
     while (date <= last) {
-      addContribution(formatDate(date), amount);
+      addContribution(formatDate(date), amount, flow.amountType === "percent");
       occurrence += 1;
       if (flow.frequency === "weekly") date.setDate(date.getDate() + 7);
       else if (flow.frequency === "annual") date = addMonths(firstDate, occurrence * 12);
@@ -346,7 +351,7 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
           }, 0)
         : 0;
       const beforeFlow = values[portfolio.id] * (1 + dailyReturn);
-      values[portfolio.id] = Math.max(0, beforeFlow + contribution);
+      values[portfolio.id] = Math.max(0, beforeFlow + contribution) * (percentageFactors.get(current.date) ?? 1);
       appliedContributions[portfolio.id] = values[portfolio.id] - beforeFlow;
     }
     if (current.date >= effectiveStart && current.date <= effectiveEnd) rows.push({ date: current.date, values: { ...values }, contributions: contribution, appliedContributions });
@@ -396,11 +401,12 @@ function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: Pric
     const sessionRows = selected.filter(row => row.date.startsWith(session));
     const previousPrice = daily.findLast(row => row.date < session);
     const previousResult = dailyResults.findLast(row => row.date < session);
-    const contribution = dailyResults.find(row => row.date === session)?.contributions ?? 0;
+    const sessionResult = dailyResults.find(row => row.date === session);
+    const contribution = sessionResult?.contributions ?? 0;
     if (!rows.length) {
       const before = new Date(sessionRows[0].date);
       before.setMinutes(before.getMinutes() - (range === "1D" ? 5 : 30));
-      rows.push({ date: `${session}T${String(before.getHours()).padStart(2, "0")}:${String(before.getMinutes()).padStart(2, "0")}:00`, values: Object.fromEntries(portfolios.map(p => [p.id, previousResult?.values[p.id] ?? Math.max(0, contribution)])), contributions: 0 });
+      rows.push({ date: `${session}T${String(before.getHours()).padStart(2, "0")}:${String(before.getMinutes()).padStart(2, "0")}:00`, values: Object.fromEntries(portfolios.map(p => [p.id, previousResult?.values[p.id] ?? 0])), contributions: 0 });
     }
     for (const [index, row] of sessionRows.entries()) {
       const values = Object.fromEntries(portfolios.map(portfolio => {
@@ -412,7 +418,8 @@ function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: Pric
           const current = row.prices[symbol];
           return sum + (base > 0 && current >= 0 && total > 0 ? (current / base - 1) * h.weight / total : 0);
         }, 0);
-        return [portfolio.id, Math.max(0, (previousResult?.values[portfolio.id] ?? 0) * (1 + change) + contribution)];
+        const cashFlow = sessionResult?.appliedContributions?.[portfolio.id] ?? contribution;
+        return [portfolio.id, Math.max(0, (previousResult?.values[portfolio.id] ?? 0) * (1 + change) + cashFlow)];
       }));
       rows.push({ date: row.date, values, contributions: index === 0 ? contribution : 0 });
     }

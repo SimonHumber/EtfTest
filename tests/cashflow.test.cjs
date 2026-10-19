@@ -127,3 +127,53 @@ test('withdrawals stop at zero and market gains cannot revive an exhausted retir
   assert.ok(marks.every(row => row.values.test >= 0));
   assert.equal(marks.at(-1).values.test, 0);
 });
+
+
+test('percentage cash flows use each portfolio value after returns and dollar flows', () => {
+  const history = [
+    { date: '2024-01-02', prices: { ETF: 100, OTHER: 100 } },
+    { date: '2024-02-02', prices: { ETF: 110, OTHER: 90 } },
+  ];
+  const compared = [...portfolios, { id: 'other', holdings: [{ symbol: 'OTHER', weight: 100 }] }];
+  const flows = [
+    { type: 'initial', amount: 10000 },
+    { type: 'recurring', frequency: 'monthly', amountType: 'percent', amount: -10, startAtBeginning: true },
+    { type: 'one-time', date: '2024-02-02', amount: 100 },
+  ];
+  const rows = context.calculateResults(history, compared, flows, '', '2024-02-02');
+  assert.equal(rows[0].values.test, 9000);
+  assert.equal(rows[1].values.test, 9000);
+  assert.equal(rows[1].values.other, 7380);
+  assert.equal(rows[1].appliedContributions.test, -900);
+  assert.equal(rows[1].appliedContributions.other, -720);
+  assert.ok(Math.abs(context.portfolioDrawdown(rows, 'test')) < 1e-10);
+  assert.ok(Math.abs(context.portfolioDrawdown(rows, 'other') + 10) < 1e-10);
+  const intraday = history.map(row => ({ ...row, date: `${row.date}T16:00:00` }));
+  const marks = context.intradayResultsForRange(history, intraday, rows, compared, flows, '', '2024-02-02', '5D');
+  assert.deepEqual(Object.entries(marks.at(-1).values), Object.entries(rows.at(-1).values));
+});
+
+test('percentage deposits compound at each occurrence and withdrawals cannot create debt', () => {
+  const history = prices(['2024-01-02', '2024-02-02', '2024-03-02']);
+  for (const amount of [10, -100, -150]) {
+    const rows = context.calculateResults(history, portfolios, [
+      { type: 'initial', amount: 1000 },
+      { type: 'recurring', frequency: 'monthly', amountType: 'percent', amount, startAtBeginning: true },
+    ], '', '2024-03-02');
+    const expected = amount === 10 ? [1100, 1210, 1331] : [0, 0, 0];
+    assert.deepEqual(Array.from(rows, row => Math.round(row.values.test)), expected);
+  }
+});
+
+test('percentage schedules support every frequency and custom starts', () => {
+  const history = prices(['2024-01-02', '2024-01-09', '2024-02-09', '2024-04-09', '2025-01-09']);
+  for (const frequency of ['weekly', 'monthly', 'quarterly', 'annual']) {
+    const rows = context.calculateResults(history, portfolios, [
+      { type: 'initial', amount: 10000 },
+      { type: 'recurring', frequency, amountType: 'percent', amount: -1, date: '2024-01-09', startAtBeginning: false },
+    ], '', '2025-01-09');
+    assert.equal(rows[0].values.test, 10000);
+    assert.equal(rows[1].values.test, 9900);
+    assert.ok(rows.at(-1).values.test < 9900);
+  }
+});
