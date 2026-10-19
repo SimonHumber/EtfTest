@@ -14,7 +14,7 @@ import { indexComparisonKey, indexComparisonName, indexLeverage, type IndexListi
 import type { Holding, Portfolio } from "../lib/backtest-types";
 
 type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; date: string; startAtBeginning?: boolean; frequency?: "monthly" | "weekly" | "quarterly" | "annual" };
-type Result = { date: string; values: Record<string, number>; contributions: number };
+type Result = { date: string; values: Record<string, number>; contributions: number; appliedContributions?: Record<string, number> };
 type PriceRow = { date: string; prices: Record<string, number> };
 type ChartRange = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y" | "Max";
 const chartRanges: ChartRange[] = ["1D", "5D", "1M", "6M", "YTD", "1Y", "3Y", "5Y", "10Y", "Max"];
@@ -109,7 +109,7 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
     const draft = flowAmountDrafts[flow.id];
     if (draft === undefined) return;
     const amount = Number(draft);
-    if (draft.trim() && Number.isFinite(amount) && amount >= 0) {
+    if (draft.trim() && Number.isFinite(amount)) {
       setFlows(items => items.map(item => item.id === flow.id ? { ...item, amount } : item));
     }
     setFlowAmountDrafts(items => { const next = { ...items }; delete next[flow.id]; return next; });
@@ -184,11 +184,11 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
             <PortfolioLeverageOptions name={portfolio.name} value={portfolio.leverage} onChange={leverage => { void updateLeverage(portfolio.id, leverage); }}/>
           </div>)}</div>
         </section>}
-        <CashFlowSection className="border border-slate-200 bg-white shadow-panel">{indices && <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 font-semibold text-slate-900">Cash flows<span className="text-xs font-normal text-slate-400">{flows.length}</span></summary>}<div className="flex items-center justify-between border-b border-slate-200 px-5 py-4"><div><h2 className="font-semibold text-slate-900">Cash flows</h2><p className="mt-0.5 text-xs text-slate-500">Applied to every {indices ? "comparison" : "portfolio"}</p></div><button onClick={() => setFlows(items => [...items, { id: crypto.randomUUID(), type: "one-time", amount: 1000, date: start }])} title="Add cash flow" aria-label="Add cash flow" className="grid h-8 w-8 place-items-center rounded-md text-[#21674f] hover:bg-[#edf5f0]"><CirclePlus size={20}/></button></div>
+        <CashFlowSection className="border border-slate-200 bg-white shadow-panel">{indices && <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 font-semibold text-slate-900">Cash flows<span className="text-xs font-normal text-slate-400">{flows.length}</span></summary>}<div className="flex items-center justify-between border-b border-slate-200 px-5 py-4"><div><h2 className="font-semibold text-slate-900">Cash flows</h2><p className="mt-0.5 text-xs text-slate-500">Use negative amounts for withdrawals; balances stop at $0. Applied to every {indices ? "comparison" : "portfolio"}</p></div><button onClick={() => setFlows(items => [...items, { id: crypto.randomUUID(), type: "one-time", amount: 1000, date: start }])} title="Add cash flow" aria-label="Add cash flow" className="grid h-8 w-8 place-items-center rounded-md text-[#21674f] hover:bg-[#edf5f0]"><CirclePlus size={20}/></button></div>
           <div className="divide-y divide-slate-100">{flows.map(flow => <div key={flow.id} className="min-w-0 p-4">
             <div className="grid grid-cols-[minmax(0,1fr)_96px_26px] gap-2">
               <select value={flow.type} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, type: e.target.value as CashFlow["type"] } : f))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700"><option value="initial">Starting balance</option><option value="recurring">Recurring</option><option value="one-time">One-time</option></select>
-              <label className="relative"><span className="absolute left-2 top-2 text-xs text-slate-400">$</span><input type="number" min="0" value={flowAmountDrafts[flow.id] ?? String(flow.amount)} onChange={e => setFlowAmountDrafts(items => ({ ...items, [flow.id]: e.target.value }))} onBlur={() => commitFlowAmount(flow)} className="h-8 w-full rounded border border-slate-200 pl-5 pr-1 text-right text-xs outline-none focus:border-[#397a62]"/></label>
+              <label className="relative"><span className="absolute left-2 top-2 text-xs text-slate-400">$</span><input type="number" step="any" aria-label="Cash flow amount" value={flowAmountDrafts[flow.id] ?? String(flow.amount)} onChange={e => setFlowAmountDrafts(items => ({ ...items, [flow.id]: e.target.value }))} onBlur={() => commitFlowAmount(flow)} className="h-8 w-full rounded border border-slate-200 pl-5 pr-1 text-right text-xs outline-none focus:border-[#397a62]"/></label>
               <button onClick={() => setFlows(items => items.filter(f => f.id !== flow.id))} className="text-slate-300 hover:text-rose-500"><Trash2 size={15}/></button>
             </div>
             {flow.type === "recurring" && <label className="mt-3 flex items-start gap-2 text-xs leading-5 text-slate-600">
@@ -274,7 +274,7 @@ function portfolioDrawdown(results: Result[], id: string) {
   let nav = 1; let peak = 1; let worst = 0;
   for (let i = 1; i < results.length; i += 1) {
     const previous = results[i - 1].values[id];
-    if (previous > 0) nav *= Math.max(0, (results[i].values[id] - results[i].contributions) / previous);
+    if (previous > 0) nav *= Math.max(0, (results[i].values[id] - (results[i].appliedContributions?.[id] ?? results[i].contributions)) / previous);
     peak = Math.max(peak, nav);
     worst = Math.min(worst, (nav / peak - 1) * 100);
   }
@@ -303,7 +303,7 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
   const lastDate = priceHistory.at(-1)!.date;
   for (const flow of flows) {
     const amount = Number(flow.amount);
-    if (!Number.isFinite(amount) || amount <= 0) continue;
+    if (!Number.isFinite(amount) || amount === 0) continue;
     if (flow.type === "initial") {
       addContribution(effectiveStart, amount);
       continue;
@@ -333,6 +333,7 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
     const current = priceHistory[index];
     const previous = priceHistory[index - 1];
     const contribution = contributions.get(current.date) ?? 0;
+    const appliedContributions: Record<string, number> = {};
     for (const portfolio of portfolios) {
       const holdings = portfolio.holdings.filter(holding => symbols.has(holding.symbol.trim().toUpperCase()) && Number(holding.weight) > 0);
       const weightTotal = holdings.reduce((sum, holding) => sum + Number(holding.weight), 0);
@@ -344,9 +345,11 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
             return sum + (before > 0 && now >= 0 ? now / before - 1 : 0) * Number(holding.weight) / weightTotal;
           }, 0)
         : 0;
-      values[portfolio.id] = values[portfolio.id] * (1 + dailyReturn) + contribution;
+      const beforeFlow = values[portfolio.id] * (1 + dailyReturn);
+      values[portfolio.id] = Math.max(0, beforeFlow + contribution);
+      appliedContributions[portfolio.id] = values[portfolio.id] - beforeFlow;
     }
-    if (current.date >= effectiveStart && current.date <= effectiveEnd) rows.push({ date: current.date, values: { ...values }, contributions: contribution });
+    if (current.date >= effectiveStart && current.date <= effectiveEnd) rows.push({ date: current.date, values: { ...values }, contributions: contribution, appliedContributions });
     if (current.date > effectiveEnd) break;
   }
   return rows;
@@ -397,7 +400,7 @@ function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: Pric
     if (!rows.length) {
       const before = new Date(sessionRows[0].date);
       before.setMinutes(before.getMinutes() - (range === "1D" ? 5 : 30));
-      rows.push({ date: `${session}T${String(before.getHours()).padStart(2, "0")}:${String(before.getMinutes()).padStart(2, "0")}:00`, values: Object.fromEntries(portfolios.map(p => [p.id, previousResult?.values[p.id] ?? contribution])), contributions: 0 });
+      rows.push({ date: `${session}T${String(before.getHours()).padStart(2, "0")}:${String(before.getMinutes()).padStart(2, "0")}:00`, values: Object.fromEntries(portfolios.map(p => [p.id, previousResult?.values[p.id] ?? Math.max(0, contribution)])), contributions: 0 });
     }
     for (const [index, row] of sessionRows.entries()) {
       const values = Object.fromEntries(portfolios.map(portfolio => {
@@ -409,7 +412,7 @@ function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: Pric
           const current = row.prices[symbol];
           return sum + (base > 0 && current >= 0 && total > 0 ? (current / base - 1) * h.weight / total : 0);
         }, 0);
-        return [portfolio.id, (previousResult?.values[portfolio.id] ?? 0) * (1 + change) + contribution];
+        return [portfolio.id, Math.max(0, (previousResult?.values[portfolio.id] ?? 0) * (1 + change) + contribution)];
       }));
       rows.push({ date: row.date, values, contributions: index === 0 ? contribution : 0 });
     }

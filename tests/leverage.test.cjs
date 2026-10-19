@@ -18,6 +18,7 @@ function load(file, overrides = {}, cache = new Map()) {
       if (id in overrides) return overrides[id];
       if (id.startsWith('.')) {
         const base = path.resolve(path.dirname(absolute), id);
+        if (base.endsWith('.json')) return { default: JSON.parse(fs.readFileSync(base, 'utf8')) };
         return load(fs.existsSync(`${base}.ts`) ? `${base}.ts` : `${base}.tsx`, overrides, cache);
       }
       return require(id);

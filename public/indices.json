@@ -1,0 +1,182 @@
+{
+  "^GSPTSE": {
+    "name": "S&P/TSX Composite index",
+    "description": ""
+  },
+  "^GSPC": {
+    "name": "S&P 500",
+    "description": ""
+  },
+  "^DJI": {
+    "name": "Dow Jones Industrial Average",
+    "description": ""
+  },
+  "^NDX": {
+    "name": "NASDAQ-100",
+    "description": ""
+  },
+  "^IXIC": {
+    "name": "NASDAQ Composite",
+    "description": ""
+  },
+  "^NYA": {
+    "name": "NYSE Composite Index",
+    "description": ""
+  },
+  "^XAX": {
+    "name": "NYSE American Composite Index",
+    "description": ""
+  },
+  "^RUT": {
+    "name": " Russell 2000 Index",
+    "description": ""
+  },
+  "^VIX": {
+    "name": "CBOE Volatility Index",
+    "description": ""
+  },
+  "^FTSE": {
+    "name": "FTSE 100",
+    "description": ""
+  },
+  "^HSI": {
+    "name": "HANG SENG INDEX",
+    "description": ""
+  },
+  "^AXJO": {
+    "name": "S&P/ASX 200 [XJO]",
+    "description": ""
+  },
+  "^NZ50": {
+    "name": "S&P/NZX 50 INDEX GROSS ( GROSS",
+    "description": ""
+  },
+  "^125904-USD-STRD": {
+    "name": "MSCI EUROPE",
+    "description": ""
+  },
+  "^N225": {
+    "name": "Nikkei 225",
+    "description": ""
+  },
+  "^GDAXI": {
+    "name": "DAX P",
+    "description": ""
+  },
+  "^FCHI": {
+    "name": "CAC 40",
+    "description": ""
+  },
+  "^STOXX50E": {
+    "name": "EURO STOXX 50 I",
+    "description": ""
+  },
+  "^SSMI": {
+    "name": "SMI PR",
+    "description": ""
+  },
+  "^IBEX": {
+    "name": "IBEX 35",
+    "description": ""
+  },
+  "FTSEMIB.MI": {
+    "name": "FTSE MIB Index",
+    "description": ""
+  },
+  "^AEX": {
+    "name": "AEX-Index",
+    "description": ""
+  },
+  "^BFX": {
+    "name": "BEL 20",
+    "description": ""
+  },
+  "^N100": {
+    "name": "Euronext 100 Index",
+    "description": ""
+  },
+  "^OMXC20": {
+    "name": "OMX Copenhagen 20",
+    "description": ""
+  },
+  "^ATX": {
+    "name": "ATX",
+    "description": ""
+  },
+  "000001.SS": {
+    "name": "SSE Composite Index",
+    "description": ""
+  },
+  "^NSEI": {
+    "name": "NIFTY 50",
+    "description": ""
+  },
+  "^BSESN": {
+    "name": "S&P BSE SENSEX",
+    "description": ""
+  },
+  "^KS11": {
+    "name": "KOSPI Composite Index",
+    "description": ""
+  },
+  "^TWII": {
+    "name": "TSEC CAPITALIZATION WEIGHTED ST",
+    "description": ""
+  },
+  "^STI": {
+    "name": "STI Index",
+    "description": ""
+  },
+  "^JKSE": {
+    "name": "IDX COMPOSITE",
+    "description": ""
+  },
+  "^KLSE": {
+    "name": "FTSE Bursa Malaysia KLCI",
+    "description": ""
+  },
+  "^AORD": {
+    "name": "ALL ORDINARIES [XAO]",
+    "description": ""
+  },
+  "^SOX": {
+    "name": "PHLX Semiconductor",
+    "description": ""
+  },
+  "^MID": {
+    "name": "S&P 400",
+    "description": ""
+  },
+  "^990100-USD-STRD": {
+    "name": "MSCI WORLD",
+    "description": ""
+  },
+  "^BVSP": {
+    "name": "IBOVESPA",
+    "description": ""
+  },
+  "^MXX": {
+    "name": "IPC MEXICO",
+    "description": ""
+  },
+  "^J203.JO": {
+    "name": "All Share Index",
+    "description": ""
+  },
+  "^TASI.SR": {
+    "name": "Tadawul All Shares Index",
+    "description": ""
+  },
+  "000300.SS": {
+    "name": "CSI 300 Index",
+    "description": ""
+  },
+  "^OMX": {
+    "name": "OMX Stockholm 30 Index",
+    "description": ""
+  },
+  "399001.SZ": {
+    "name": "Shenzhen Index",
+    "description": ""
+  }
+}

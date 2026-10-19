@@ -1,17 +1,22 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
 const { load, hooks, elements } = require('./ui-test-helpers.cjs');
 const directory = load('app/lib/index-directory.ts');
-const listings = directory.parseIndexDirectory(fs.readFileSync('public/indices.txt', 'utf8'));
+const listings = directory.indexListings;
 const tick = () => new Promise(setImmediate);
 
-test('index allowlist handles BOM, CRLF, duplicates, suffixes and unknown additions', () => {
-  const items = directory.parseIndexDirectory('\uFEFF^GSPC\r\n\n000001.SS\nFTSEMIB.MI\n ^GSPC \nCUSTOM.INDEX\n');
-  assert.deepEqual(Array.from(items, item => item.symbol), ['^GSPC', '000001.SS', 'FTSEMIB.MI', 'CUSTOM.INDEX']);
-  assert.equal(items[0].name, 'S&P 500');
-  assert.equal(items.at(-1).name, 'CUSTOM.INDEX');
-  assert.equal(listings.length, 46);
+test('index allowlist and metadata come exclusively from JSON', () => {
+  const metadata = require('../public/indices.json');
+  assert.deepEqual(Array.from(listings, item => item.symbol), Object.keys(metadata));
+  for (const item of listings) {
+    assert.equal(item.name, metadata[item.symbol].name);
+    assert.equal(item.description, metadata[item.symbol].description);
+  }
+  const custom = load('app/lib/index-directory.ts', {
+    '../../public/indices.json': { '^NDX': { name: 'NASDAQ-100', description: 'Index description' } },
+  });
+  assert.deepEqual(Array.from(custom.indexListings, item => item.symbol), ['^NDX']);
+  assert.equal(custom.indexListings[0].description, 'Index description');
   assert.equal(directory.indexLeverage(1).enabled, false);
   assert.equal(directory.indexLeverage(3).settings.expenseRatio, .0095);
   const a = { enabled: true, settings: { leverage: 3, expenseRatio: .0095, financingSpread: .005 } };
@@ -19,24 +24,23 @@ test('index allowlist handles BOM, CRLF, duplicates, suffixes and unknown additi
   assert.equal(directory.indexComparisonKey('^GSPC', a), directory.indexComparisonKey('^GSPC', b));
 });
 
-test('Indices loads only the static list on activation, preserves it and supports retry', async () => {
-  const h = hooks(), calls = [];
-  let active = false, fail = true;
+test('Indices uses bundled JSON without fetching and stays mounted after activation', () => {
+  const h = hooks();
+  let active = false;
   function BacktestView() {}
   const { IndicesView } = load('app/ui/indices-view.tsx', {
     react: h.react, './backtest-view': { BacktestView },
-    fetch: async url => { calls.push(url); return { ok: !fail, text: async () => '^GSPC\n^NDX' }; },
+    fetch: () => { throw new Error('Unexpected network request'); },
   });
   const render = () => h.render(() => IndicesView({ active }));
-  render(); assert.equal(calls.length, 0);
-  active = true; render(); await tick();
-  assert.equal(elements(render(), el => el.props?.role === 'alert').length, 1);
-  fail = false;
-  elements(render(), el => el.type === 'button')[0].props.onClick(); render(); await tick();
+  assert.equal(render(), null);
+  active = true;
   assert.equal(render().type, BacktestView);
-  assert.equal(render().props.indices.length, 2);
-  active = false; render(); active = true; render();
-  assert.deepEqual(calls, ['/indices.txt', '/indices.txt']);
+  assert.deepEqual(Array.from(render().props.indices, item => item.symbol), Array.from(listings, item => item.symbol));
+  active = false;
+  assert.equal(render().type, BacktestView);
+  active = true;
+  assert.equal(render().type, BacktestView);
 });
 
 test('picker filters locally and adds checked and custom leverage choices', () => {
@@ -56,10 +60,33 @@ test('picker filters locally and adds checked and custom leverage choices', () =
   assert.equal(adds[0][0], '^NDX');
   assert.deepEqual(Array.from(adds[0][1]), [1, 3, 1.5]);
   label('Clear index search').props.onClick();
-  label('Index region').props.onChange({ target: { value: 'Canada' } });
+  assert.equal(label('Index region'), undefined);
+  label('Search indices').props.onChange({ target: { value: '^GSPTSE' } });
   options = elements(render(), el => el.props?.role === 'option');
   assert.equal(options.length, 1);
   assert.equal(options[0].key, '^GSPTSE');
+});
+
+test('index descriptions open independently of selection and close with the button or Escape', () => {
+  const h = hooks(), adds = [];
+  const { IndexComparisonEditor } = load('app/ui/index-comparison-editor.tsx', { react: h.react });
+  const entries = [
+    { symbol: '^GSPC', name: 'S&P 500', description: 'Tracks large US companies.' },
+    { symbol: '^NDX', name: 'NASDAQ-100', description: '' },
+  ];
+  const render = () => h.render(() => IndexComparisonEditor({ listings: entries, portfolios: [], onAdd: (...args) => adds.push(args), onUpdate() {}, onRemove() {}, onLeverage() {} }));
+  const label = value => elements(render(), el => el.props?.['aria-label'] === value)[0];
+  const dialog = () => elements(render(), el => el.type === 'dialog')[0];
+  label('About ^GSPC').props.onClick();
+  assert.ok(JSON.stringify(dialog()).includes('Tracks large US companies.'));
+  assert.equal(elements(render(), el => el.props?.role === 'option' && el.props['aria-selected']).length, 0);
+  assert.equal(adds.length, 0);
+  label('Close description').props.onClick();
+  assert.ok(!JSON.stringify(dialog()).includes('Tracks large US companies.'));
+  label('About ^NDX').props.onClick();
+  assert.ok(JSON.stringify(dialog()).includes('No description is available from Yahoo Finance'));
+  dialog().props.onCancel();
+  assert.ok(!JSON.stringify(dialog()).includes('NASDAQ-100'));
 });
 
 function setup({ failed = [], failRates = false } = {}) {
@@ -138,15 +165,35 @@ test('index date ranges, recurring cash flows and chart ranges recalculate local
   dates[0].props.onChange('2024-01-03');
   assert.notEqual(app.chart().results, initialResults);
   const beforeFlows = app.chart().results;
-  const cash = elements(app.render(), el => el.type === 'input' && el.props.type === 'number' && el.props.min === '0')[1];
-  cash.props.onChange({ target: { value: '100' } });
+  const cash = elements(app.render(), el => el.props?.['aria-label'] === 'Cash flow amount')[1];
+  cash.props.onChange({ target: { value: '-100' } });
   assert.equal(app.chart().results, beforeFlows, 'amount changes commit on blur');
-  elements(app.render(), el => el.type === 'input' && el.props.type === 'number' && el.props.min === '0')[1].props.onBlur();
+  elements(app.render(), el => el.props?.['aria-label'] === 'Cash flow amount')[1].props.onBlur();
   assert.notEqual(app.chart().results, beforeFlows);
+  assert.equal(app.chart().results[0].contributions, 9900);
   const preset = elements(app.render(), el => el.type === 'button' && el.props.children === '1Y')[0];
   preset.props.onClick(); app.render();
   assert.deepEqual(app.calls, ['^GSPC']);
   assert.equal(app.rateCalls.length, 1);
+});
+
+test('both backtest pages commit negative cash flows and reject incomplete amounts', () => {
+  for (const indices of [undefined, listings]) {
+    const h = hooks();
+    const { BacktestView } = load('app/ui/backtest-view.tsx', {
+      react: h.react,
+      './market-data-provider': { useMarketData: () => ({ series: {}, loadSeries() {}, getRiskFreeRates() {} }) },
+    });
+    const render = () => h.render(() => BacktestView({ indices }));
+    const amount = () => elements(render(), el => el.props?.['aria-label'] === 'Cash flow amount')[1];
+    assert.equal(amount().props.min, undefined);
+    amount().props.onChange({ target: { value: '-1250.50' } });
+    amount().props.onBlur();
+    assert.equal(amount().props.value, '-1250.5');
+    amount().props.onChange({ target: { value: '' } });
+    amount().props.onBlur();
+    assert.equal(amount().props.value, '-1250.5');
+  }
 });
 
 test('invalid leverage edits preserve the last valid chart and auto names follow valid edits', async () => {

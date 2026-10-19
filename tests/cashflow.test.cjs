@@ -5,7 +5,7 @@ const vm = require('node:vm');
 const ts = require('typescript');
 
 const source = fs.readFileSync('app/ui/backtest-view.tsx', 'utf8');
-const code = ts.transpileModule(source.slice(source.indexOf('function calculateResults(')), {
+const code = ts.transpileModule(source.slice(source.indexOf('function portfolioDrawdown(')), {
   compilerOptions: { target: ts.ScriptTarget.ES2022 },
 }).outputText;
 const context = vm.createContext({ Date });
@@ -78,4 +78,52 @@ test('range-anchored recurring contributions never accumulate before price histo
   const flow = { type: 'recurring', frequency: 'weekly', amount: 100, date: '', startAtBeginning: true };
   const rows = context.calculateResults(history, portfolios, [flow], '2020-01-01', '2024-01-16');
   assert.deepEqual(Array.from(rows, row => row.contributions), [100, 100, 100]);
+});
+
+
+test('retirement withdrawals apply after market returns and roll forward to trading days', () => {
+  const history = [
+    { date: '2024-01-05', prices: { ETF: 100 } },
+    { date: '2024-01-08', prices: { ETF: 110 } },
+    { date: '2024-02-05', prices: { ETF: 99 } },
+  ];
+  const rows = context.calculateResults(history, portfolios, [
+    { type: 'initial', amount: 10000 },
+    { type: 'recurring', frequency: 'monthly', amount: -1000, startAtBeginning: true },
+    { type: 'one-time', date: '2024-01-06', amount: -500 },
+  ], '', '2024-02-05');
+  assert.deepEqual(Array.from(rows, row => row.contributions), [9000, -500, -1000]);
+  assert.deepEqual(Array.from(rows, row => Math.round(row.values.test)), [9000, 9400, 7460]);
+});
+
+test('every recurring frequency accepts withdrawals', () => {
+  const history = prices(['2024-01-02', '2025-01-02']);
+  for (const frequency of ['weekly', 'monthly', 'quarterly', 'annual']) {
+    const rows = context.calculateResults(history, portfolios, [
+      { type: 'initial', amount: 100000 },
+      { type: 'recurring', frequency, amount: -100, startAtBeginning: true },
+    ], '', '2025-01-02');
+    assert.equal(rows[0].values.test, 99900);
+    assert.ok(rows[1].contributions < 0);
+    assert.equal(rows[1].values.test, 99900 + rows[1].contributions);
+  }
+});
+
+
+test('withdrawals stop at zero and market gains cannot revive an exhausted retirement portfolio', () => {
+  const history = [100, 110, 220, 330].map((price, i) => ({ date: `2024-01-0${i + 2}`, prices: { ETF: price } }));
+  const rows = context.calculateResults(history, portfolios, [
+    { type: 'initial', amount: 1000 },
+    { type: 'one-time', date: '2024-01-03', amount: -2000 },
+  ], '', '2024-01-05');
+  assert.deepEqual(Array.from(rows, row => row.values.test), [1000, 0, 0, 0]);
+  assert.equal(rows[1].appliedContributions.test, -1100);
+  assert.equal(context.portfolioDrawdown(rows, 'test'), 0);
+  const intraday = history.map(row => ({ ...row, date: `${row.date}T16:00:00` }));
+  const marks = context.intradayResultsForRange(history, intraday, rows, portfolios, [
+    { type: 'initial', amount: 1000 },
+    { type: 'one-time', date: '2024-01-03', amount: -2000 },
+  ], '', '2024-01-05', '5D');
+  assert.ok(marks.every(row => row.values.test >= 0));
+  assert.equal(marks.at(-1).values.test, 0);
 });
