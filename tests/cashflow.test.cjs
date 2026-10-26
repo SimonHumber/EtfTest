@@ -177,3 +177,51 @@ test('percentage schedules support every frequency and custom starts', () => {
     assert.ok(rows.at(-1).values.test < 9900);
   }
 });
+
+test('recurring end dates are inclusive for every frequency and cash-flow direction', () => {
+  const history = prices(['2024-01-02', '2024-01-09', '2024-02-02', '2024-04-02', '2025-01-02', '2026-01-02']);
+  for (const frequency of ['weekly', 'monthly', 'quarterly', 'annual']) {
+    for (const amount of [100, -100]) {
+      const flows = [{ type: 'initial', amount: 100000 }, { type: 'recurring', frequency, amount, startAtBeginning: true, endDate: '2025-01-02' }];
+      const rows = context.calculateResults(history, portfolios, flows, '', '2026-01-02');
+      assert.notEqual(rows.at(-2).contributions, 0, `${frequency}: occurrence on end date is included`);
+      assert.equal(rows.at(-1).contributions, 0);
+      assert.equal(rows.at(-1).values.test, rows.at(-2).values.test);
+    }
+  }
+});
+
+test('recurring contributions rolled to a trading day after their end date are excluded', () => {
+  const history = prices(['2024-01-05', '2024-01-08', '2024-01-15']);
+  const flow = { type: 'recurring', frequency: 'weekly', amount: 100, date: '2024-01-06', startAtBeginning: false };
+  const ended = context.calculateResults(history, portfolios, [{ ...flow, endDate: '2024-01-07' }], '', '2024-01-15');
+  assert.ok(ended.every(row => row.contributions === 0));
+  const inclusive = context.calculateResults(history, portfolios, [{ ...flow, endDate: '2024-01-08' }], '', '2024-01-15');
+  assert.deepEqual(Array.from(inclusive, row => row.contributions), [0, 100, 0]);
+});
+
+test('clearing recurring end dates restores the full schedule; a cutoff before the start adds nothing', () => {
+  const history = prices(['2024-01-02', '2024-02-02', '2024-03-02']);
+  for (const startAtBeginning of [true, false]) {
+    const flow = { type: 'recurring', frequency: 'monthly', amount: 100, date: '2024-01-02', startAtBeginning };
+    const early = context.calculateResults(history, portfolios, [{ ...flow, endDate: '2024-01-01' }], '', '2024-03-02');
+    assert.ok(early.every(row => row.contributions === 0));
+    const ended = context.calculateResults(history, portfolios, [{ ...flow, endDate: '2024-02-02' }], '', '2024-03-02');
+    assert.equal(ended.at(-1).values.test, 200);
+    const cleared = context.calculateResults(history, portfolios, [{ ...flow, endDate: '' }], '', '2024-03-02');
+    assert.equal(cleared.at(-1).values.test, 300);
+  }
+});
+
+test('percentage recurring cutoffs stop compounding without ending the backtest', () => {
+  const history = prices(['2024-01-02', '2024-02-02', '2024-03-02']);
+  for (const amount of [10, -10]) {
+    const rows = context.calculateResults(history, portfolios, [
+      { type: 'initial', amount: 10000 },
+      { type: 'recurring', frequency: 'monthly', amountType: 'percent', amount, startAtBeginning: true, endDate: '2024-02-02' },
+    ], '', '2024-03-02');
+    assert.equal(rows.length, 3);
+    assert.equal(Math.round(rows[1].values.test), amount > 0 ? 12100 : 8100);
+    assert.equal(rows[2].values.test, rows[1].values.test);
+  }
+});

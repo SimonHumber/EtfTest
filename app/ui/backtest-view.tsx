@@ -13,7 +13,7 @@ import { IndexComparisonEditor } from "./index-comparison-editor";
 import { indexComparisonKey, indexComparisonName, indexLeverage, type IndexListing } from "../lib/index-directory";
 import type { Holding, Portfolio } from "../lib/backtest-types";
 
-type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; amountType?: "dollars" | "percent"; date: string; startAtBeginning?: boolean; frequency?: "monthly" | "weekly" | "quarterly" | "annual" };
+type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; amountType?: "dollars" | "percent"; date: string; endDate?: string; startAtBeginning?: boolean; frequency?: "monthly" | "weekly" | "quarterly" | "annual" };
 type Result = { date: string; values: Record<string, number>; contributions: number; appliedContributions?: Record<string, number> };
 type PriceRow = { date: string; prices: Record<string, number> };
 type ChartRange = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y" | "Max";
@@ -211,6 +211,18 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
                 className="h-8 min-w-0 w-full rounded border border-slate-200 px-2 text-xs text-slate-600 disabled:bg-slate-50 disabled:text-slate-400"/>}
               {flow.type === "recurring" ? <select value={flow.frequency} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, frequency: e.target.value as CashFlow["frequency"] } : f))} className="h-8 min-w-0 w-full rounded border border-slate-200 bg-white px-2 text-xs text-slate-600"><option value="monthly">Monthly</option><option value="weekly">Weekly</option><option value="quarterly">Quarterly</option><option value="annual">Annually</option></select> : <span/>}
             </div>
+            {flow.type === "recurring" && <div className="mt-3">
+              <label htmlFor={`recurring-end-${indices ? "indices" : "backtest"}-${flow.id}`} className="block text-xs text-slate-500">End date (optional)</label>
+                <div className="mt-1 flex min-w-0 items-center gap-1">
+                  <input id={`recurring-end-${indices ? "indices" : "backtest"}-${flow.id}`} type="date" aria-label="Recurring contribution end date" value={flow.endDate ?? ""}
+                    onChange={event => setFlows(items => items.map(item => item.id === flow.id ? { ...item, endDate: event.target.value } : item))}
+                    className="h-8 min-w-0 w-full rounded border border-slate-200 px-2 text-xs text-slate-600"/>
+                  {flow.endDate && <button type="button" title="Clear recurring end date" aria-label="Clear recurring contribution end date"
+                    onClick={() => setFlows(items => items.map(item => item.id === flow.id ? { ...item, endDate: "" } : item))}
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700"><X size={14}/></button>}
+                </div>
+              {flow.endDate && flow.endDate < (flow.startAtBeginning !== false ? recurringStartDate(start, priceHistory?.[0]?.date) : flow.date) && <p role="alert" className="mt-1 text-xs text-amber-700">End date is before the recurring start date.</p>}
+            </div>}
           </div>)}</div>
         </CashFlowSection>
         <button type="button" onClick={() => void run()} disabled={loading} className="mx-auto flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#15233c] px-4 text-sm font-semibold text-white hover:bg-[#22375c] disabled:opacity-70 sm:hidden"><Play size={15} fill="currentColor"/>{loading ? "Running..." : "Run backtest"}</button>
@@ -291,7 +303,7 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
 
   const contributions = new Map<string, number>();
   const percentageFactors = new Map<string, number>();
-  const addContribution = (date: string, amount: number, percent = false) => {
+  const addContribution = (date: string, amount: number, percent = false, cutoff?: string) => {
     let low = 0;
     let high = priceHistory.length;
     while (low < high) {
@@ -300,7 +312,7 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
       else high = mid;
     }
     const row = priceHistory[low];
-    if (row) {
+    if (row && (!cutoff || row.date <= cutoff)) {
       if (percent) percentageFactors.set(row.date, (percentageFactors.get(row.date) ?? 1) * Math.max(0, 1 + amount / 100));
       else contributions.set(row.date, (contributions.get(row.date) ?? 0) + amount);
     }
@@ -322,9 +334,9 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
     const firstDate = parseLocalDate(recurringStart);
     let date = new Date(firstDate);
     let occurrence = 0;
-    const last = parseLocalDate(lastDate);
+    const last = parseLocalDate(flow.endDate && flow.endDate < lastDate ? flow.endDate : lastDate);
     while (date <= last) {
-      addContribution(formatDate(date), amount, flow.amountType === "percent");
+      addContribution(formatDate(date), amount, flow.amountType === "percent", flow.endDate);
       occurrence += 1;
       if (flow.frequency === "weekly") date.setDate(date.getDate() + 7);
       else if (flow.frequency === "annual") date = addMonths(firstDate, occurrence * 12);
