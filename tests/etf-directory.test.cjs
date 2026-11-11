@@ -262,7 +262,7 @@ test('recurring start checkbox defaults on, follows the range, and preserves cus
     './market-data-provider': { useMarketData: () => ({ series: {}, loadSeries() { throw new Error('Unexpected price request'); }, getRiskFreeRates() { throw new Error('Unexpected rate request'); } }) },
   });
   const render = () => h.render(() => BacktestView());
-  const checkbox = () => elements(render(), el => el.type === 'input' && el.props.type === 'checkbox')[0];
+  const checkbox = () => elements(render(), el => el.props?.['aria-label'] === 'Start recurring contributions at beginning of backtest')[0];
   const date = () => elements(render(), el => el.props?.['aria-label'] === 'Recurring contribution start date')[0];
   const start = () => elements(render(), el => el.type?.name === 'DateInput')[0];
   assert.equal(checkbox().props.checked, true);
@@ -280,7 +280,7 @@ test('recurring start checkbox defaults on, follows the range, and preserves cus
   assert.equal(date().props.value, '2024-02-03');
   elements(render(), el => el.props?.['aria-label'] === 'Add cash flow')[0].props.onClick();
   elements(render(), el => el.type === 'select' && el.props.value === 'one-time')[0].props.onChange({ target: { value: 'recurring' } });
-  const checkboxes = elements(render(), el => el.type === 'input' && el.props.type === 'checkbox');
+  const checkboxes = elements(render(), el => el.props?.['aria-label'] === 'Start recurring contributions at beginning of backtest');
   assert.equal(checkboxes.length, 2);
   assert.equal(checkboxes[1].props.checked, true, 'newly converted recurring contributions default to range start');
 });

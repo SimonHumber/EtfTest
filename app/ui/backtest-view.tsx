@@ -12,11 +12,14 @@ import type { TickerSelection } from "../lib/etf-directory";
 import { IndexComparisonEditor } from "./index-comparison-editor";
 import { indexComparisonKey, indexComparisonName, indexLeverage, type IndexListing } from "../lib/index-directory";
 import type { Holding, Portfolio } from "../lib/backtest-types";
+import { calculateAnnualInvestments, calculateBacktestPerformance } from "../lib/backtest-performance";
+import { BacktestInvestmentsTable, BacktestReturnsTable } from "./backtest-returns-table";
 
 type CashFlow = { id: string; type: "initial" | "recurring" | "one-time"; amount: number; amountType?: "dollars" | "percent"; date: string; endDate?: string; startAtBeginning?: boolean; frequency?: "monthly" | "weekly" | "quarterly" | "annual" };
-type Result = { date: string; values: Record<string, number>; contributions: number; appliedContributions?: Record<string, number> };
+type Result = { date: string; values: Record<string, number>; contributions: number; appliedContributions?: Record<string, number>; athPurchases?: Record<string, number>; investedContributions?: Record<string, number>; investmentPurchases?: Record<string, number> };
 type PriceRow = { date: string; prices: Record<string, number> };
 type ChartRange = "1D" | "5D" | "1M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "10Y" | "Max";
+type HighInvesting = { enabled: boolean; amount: number };
 const chartRanges: ChartRange[] = ["1D", "5D", "1M", "6M", "YTD", "1Y", "3Y", "5Y", "10Y", "Max"];
 
 const colors = ["#17724a", "#266ad1", "#b35f24", "#9a3d85"];
@@ -45,6 +48,8 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
   const leverageEdits = useRef<Record<string, PortfolioLeverageConfig>>({});
   const rateSnapshot = useRef<RatePoint[]>([]);
   const calculationVersion = useRef(0);
+  const [highInvesting, setHighInvesting] = useState<HighInvesting>({ enabled: false, amount: 100 });
+  const [highAmountDraft, setHighAmountDraft] = useState<string>();
   useEffect(() => {
     if (!portfolioSelection) return;
     const { id, symbol } = portfolioSelection;
@@ -164,11 +169,17 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
     link.click();
     URL.revokeObjectURL(url);
   };
-  const results = useMemo(() => calculateResults(priceHistory, testedPortfolios, flows, start, end), [priceHistory, testedPortfolios, flows, start, end]);
-  const summary = useMemo(() => displayPortfolios.map(p => ({ portfolio: p, start: results[0]?.values[p.id] ?? 0, end: results.at(-1)?.values[p.id] ?? 0, drawdown: portfolioDrawdown(results, p.id) })), [displayPortfolios, results]);
+  const results = useMemo(() => calculateResults(priceHistory, testedPortfolios, flows, start, end, highInvesting), [priceHistory, testedPortfolios, flows, start, end, highInvesting]);
+  const performance = useMemo(() => calculateBacktestPerformance(results, testedPortfolios.map(portfolio => portfolio.id)), [results, testedPortfolios]);
+  const annualInvestments = useMemo(() => highInvesting.enabled ? calculateAnnualInvestments(results, testedPortfolios.map(portfolio => portfolio.id)) : [], [results, testedPortfolios, highInvesting.enabled]);
+  const summary = useMemo(() => displayPortfolios.map(p => {
+    const invested = results.reduce((total, row) => total + (row.investedContributions?.[p.id] ?? 0), 0);
+    const purchases = results.reduce((total, row) => total + (row.investmentPurchases?.[p.id] ?? 0), 0);
+    return { portfolio: p, start: highInvesting.enabled ? invested : results[0]?.values[p.id] ?? 0, end: results.at(-1)?.values[p.id] ?? 0, invested, purchases, drawdown: portfolioDrawdown(results, p.id) };
+  }), [displayPortfolios, results, highInvesting.enabled]);
   const visibleResults = useMemo(() => chartRange === "1D" || chartRange === "5D"
-    ? intradayResultsForRange(priceHistory, intradayPriceHistory[chartRange === "1D" ? "5m" : "30m"] ?? [], results, testedPortfolios, flows, start, end, chartRange)
-    : resultsForRange(results, chartRange), [priceHistory, intradayPriceHistory, results, testedPortfolios, flows, start, end, chartRange]);
+    ? intradayResultsForRange(priceHistory, intradayPriceHistory[chartRange === "1D" ? "5m" : "30m"] ?? [], results, testedPortfolios, flows, start, end, chartRange, highInvesting)
+    : resultsForRange(results, chartRange), [priceHistory, intradayPriceHistory, results, testedPortfolios, flows, start, end, chartRange, highInvesting]);
   return <div className="mx-auto max-w-[1440px] px-4 py-7 [overflow-wrap:anywhere] sm:px-6 lg:px-8">
     <div className="mb-7 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
       <div className="min-w-0"><p className="mb-1 text-sm font-semibold text-[#397a62]">{indices ? "Index lab" : "Portfolio lab"}</p><h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{indices ? "Indices" : "Compare your investing ideas."}</h1><p className="mt-2 text-sm text-slate-500">{indices ? "Native index returns · No currency conversion · Daily-reset simulations" : "Model holdings, deposits, and historical performance in one place."}</p></div>
@@ -184,16 +195,32 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
             <PortfolioLeverageOptions name={portfolio.name} value={portfolio.leverage} onChange={leverage => { void updateLeverage(portfolio.id, leverage); }}/>
           </div>)}</div>
         </section>}
-        <CashFlowSection className="border border-slate-200 bg-white shadow-panel">{indices && <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 font-semibold text-slate-900">Cash flows<span className="text-xs font-normal text-slate-400">{flows.length}</span></summary>}<div className="flex items-center justify-between border-b border-slate-200 px-5 py-4"><div><h2 className="font-semibold text-slate-900">Cash flows</h2><p className="mt-0.5 text-xs text-slate-500">Use negative amounts for withdrawals; balances stop at $0. Applied to every {indices ? "comparison" : "portfolio"}</p></div><button onClick={() => setFlows(items => [...items, { id: crypto.randomUUID(), type: "one-time", amount: 1000, date: start }])} title="Add cash flow" aria-label="Add cash flow" className="grid h-8 w-8 place-items-center rounded-md text-[#21674f] hover:bg-[#edf5f0]"><CirclePlus size={20}/></button></div>
-          <div className="divide-y divide-slate-100">{flows.map(flow => <div key={flow.id} className="min-w-0 p-4">
+        <section className="min-w-0 border border-slate-200 bg-white p-4 shadow-panel">
+          <label className="flex items-start gap-2 text-sm font-semibold text-slate-800">
+            <input type="checkbox" aria-label="Invest only at all-time highs" checked={highInvesting.enabled} onChange={event => setHighInvesting(value => ({ ...value, enabled: event.target.checked }))} className="mt-0.5 h-4 w-4 shrink-0 accent-[#21674f]"/>
+            <span>Invest only at all-time highs</span>
+          </label>
+          {highInvesting.enabled && <div className="mt-3 space-y-3">
+            <label className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">Investment per new high
+              <span className="relative"><span className="absolute left-2 top-2 text-slate-400">$</span><input type="number" min="0" step="any" aria-label="All-time-high investment amount" value={highAmountDraft ?? highInvesting.amount}
+                onChange={event => setHighAmountDraft(event.target.value)} onBlur={() => {
+                  if (highAmountDraft !== undefined && highAmountDraft.trim() && Number.isFinite(Number(highAmountDraft)) && Number(highAmountDraft) >= 0) setHighInvesting(value => ({ ...value, amount: Number(highAmountDraft) }));
+                  setHighAmountDraft(undefined);
+                }} className="h-9 w-28 rounded border border-slate-200 pl-5 pr-2 text-right text-sm outline-none focus:border-[#397a62]"/></span>
+            </label>
+            <p className="text-xs leading-5 text-slate-500">New adjusted closing highs since the investment start date, filled at the same close. Starting balance remains invested; other cash flows are paused.</p>
+          </div>}
+        </section>
+        <CashFlowSection open={indices && highInvesting.enabled ? true : undefined} className="border border-slate-200 bg-white shadow-panel">{indices && <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 font-semibold text-slate-900">{highInvesting.enabled ? "Starting balance" : "Cash flows"}<span className="text-xs font-normal text-slate-400">{flows.filter(flow => !highInvesting.enabled || flow.type === "initial").length}</span></summary>}<div className="flex items-center justify-between border-b border-slate-200 px-5 py-4"><div><h2 className="font-semibold text-slate-900">{highInvesting.enabled ? "Starting balance" : "Cash flows"}</h2><p className="mt-0.5 text-xs text-slate-500">{highInvesting.enabled ? "Invested at the beginning of the date range." : `Use negative amounts for withdrawals; balances stop at $0. Applied to every ${indices ? "comparison" : "portfolio"}`}</p></div><button onClick={() => setFlows(items => [...items, { id: crypto.randomUUID(), type: highInvesting.enabled ? "initial" : "one-time", amount: highInvesting.enabled ? 10000 : 1000, date: start }])} title={highInvesting.enabled ? "Add starting balance" : "Add cash flow"} aria-label="Add cash flow" className="grid h-8 w-8 place-items-center rounded-md text-[#21674f] hover:bg-[#edf5f0]"><CirclePlus size={20}/></button></div>
+          <div className="divide-y divide-slate-100">{flows.filter(flow => !highInvesting.enabled || flow.type === "initial").map(flow => <div key={flow.id} className="min-w-0 p-4">
             <div className="grid grid-cols-[minmax(0,1fr)_96px_26px] gap-2">
-              <select value={flow.type} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, type: e.target.value as CashFlow["type"] } : f))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700"><option value="initial">Starting balance</option><option value="recurring">Recurring</option><option value="one-time">One-time</option></select>
+              <select value={flow.type} disabled={highInvesting.enabled} onChange={e => setFlows(items => items.map(f => f.id === flow.id ? { ...f, type: e.target.value as CashFlow["type"] } : f))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700"><option value="initial">Starting balance</option><option value="recurring">Recurring</option><option value="one-time">One-time</option></select>
               <label className="relative"><span className="absolute left-2 top-2 text-xs text-slate-400">{flow.type === "recurring" && flow.amountType === "percent" ? "%" : "$"}</span><input type="number" step="any" aria-label="Cash flow amount" value={flowAmountDrafts[flow.id] ?? String(flow.amount)} onChange={e => setFlowAmountDrafts(items => ({ ...items, [flow.id]: e.target.value }))} onBlur={() => commitFlowAmount(flow)} className="h-8 w-full rounded border border-slate-200 pl-5 pr-1 text-right text-xs outline-none focus:border-[#397a62]"/></label>
               <button onClick={() => setFlows(items => items.filter(f => f.id !== flow.id))} className="text-slate-300 hover:text-rose-500"><Trash2 size={15}/></button>
             </div>
             {flow.type === "recurring" && <div className="mt-3"><label className="flex items-center gap-2 text-xs text-slate-600">Amount in<select aria-label="Recurring cash flow unit" value={flow.amountType ?? "dollars"} onChange={event => setFlows(items => items.map(item => item.id === flow.id ? { ...item, amountType: event.target.value as CashFlow["amountType"] } : item))} className="h-8 min-w-0 rounded border border-slate-200 bg-white px-2 text-xs"><option value="dollars">Dollars</option><option value="percent">Percent of portfolio</option></select></label>{flow.amountType === "percent" && <p className="mt-1 text-xs leading-5 text-slate-500">Percentage per occurrence, after market returns and dollar cash flows. Use a negative percentage to withdraw.</p>}</div>}
             {flow.type === "recurring" && <label className="mt-3 flex items-start gap-2 text-xs leading-5 text-slate-600">
-              <input type="checkbox" checked={flow.startAtBeginning !== false} onChange={event => {
+              <input type="checkbox" aria-label="Start recurring contributions at beginning of backtest" checked={flow.startAtBeginning !== false} onChange={event => {
                 const checked = event.target.checked;
                 setFlows(items => items.map(item => item.id === flow.id ? {
                   ...item, startAtBeginning: checked,
@@ -227,9 +254,11 @@ export function BacktestView({ portfolioSelection, indices }: { portfolioSelecti
         </CashFlowSection>
         <button type="button" onClick={() => void run()} disabled={loading} className="mx-auto flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#15233c] px-4 text-sm font-semibold text-white hover:bg-[#22375c] disabled:opacity-70 sm:hidden"><Play size={15} fill="currentColor"/>{loading ? "Running..." : "Run backtest"}</button>
       </aside>
-      <section className="min-w-0 border border-slate-200 bg-white shadow-panel"><div className="flex flex-col justify-between gap-4 border-b border-slate-200 p-5 sm:p-6"><div><h2 className="font-semibold text-slate-900">Growth of $10,000</h2><p className="mt-1 text-sm text-slate-500">Includes every modeled cash flow</p></div><div className="flex flex-wrap items-center gap-2"><div className="flex max-w-full overflow-x-auto rounded-md border border-slate-200 p-0.5">{chartRanges.map(option => <button key={option} onClick={() => setChartRange(option)} className={`h-7 shrink-0 rounded px-2 text-xs font-semibold ${chartRange === option ? "bg-[#15233c] text-white" : "text-slate-500 hover:bg-slate-100"}`}>{option}</button>)}</div><button onClick={exportResults} className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Download size={15}/> Export</button></div></div>
+      <section className="min-w-0 border border-slate-200 bg-white shadow-panel"><div className="flex flex-col justify-between gap-4 border-b border-slate-200 p-5 sm:p-6"><div><h2 className="font-semibold text-slate-900">{highInvesting.enabled ? "All-time-high investing" : "Growth of $10,000"}</h2><p className="mt-1 text-sm text-slate-500">{highInvesting.enabled ? `${dollars(highInvesting.amount)} per new closing high; highs measured before cash flows` : "Includes every modeled cash flow"}</p></div><div className="flex flex-wrap items-center gap-2"><div className="flex max-w-full overflow-x-auto rounded-md border border-slate-200 p-0.5">{chartRanges.map(option => <button key={option} onClick={() => setChartRange(option)} className={`h-7 shrink-0 rounded px-2 text-xs font-semibold ${chartRange === option ? "bg-[#15233c] text-white" : "text-slate-500 hover:bg-slate-100"}`}>{option}</button>)}</div><button onClick={exportResults} className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Download size={15}/> Export</button></div></div>
         {priceHistory ? <PerformanceChart key={chartRange} portfolios={displayPortfolios} results={visibleResults} range={chartRange}/> : <div className="grid min-h-[300px] place-items-center px-5 text-center text-sm text-slate-500">{indices ? "No comparisons yet." : "Run backtest to load daily adjusted prices. Cash flows and date ranges will recalculate instantly from that data."}</div>}
-        <div className="grid border-t border-slate-200 sm:grid-cols-2">{summary.map(({ portfolio, start: starting, end: ending, drawdown }) => { const ret = starting ? ((ending - starting) / starting) * 100 : 0; return <div key={portfolio.id} className="border-b border-slate-100 p-5 last:border-b-0 sm:border-b-0 sm:[&:nth-child(even)]:border-l sm:p-6"><div className="mb-3 flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full" style={{ background: portfolio.color }}/><span className="text-sm font-semibold text-slate-800">{portfolio.name}</span></div><div className="flex items-end justify-between gap-3"><div><p className="text-2xl font-bold tabular-nums text-slate-900">{dollars(ending)}</p><p className="mt-1 text-xs text-slate-400">Ending value</p></div><span className={`text-sm font-bold tabular-nums ${ret >= 0 ? "text-[#17724a]" : "text-rose-600"}`}>{ret >= 0 ? "+" : ""}{ret.toFixed(1)}%</span></div><p className="mt-3 text-xs text-slate-500">Max drawdown <span className="font-semibold tabular-nums text-rose-600">{drawdown.toFixed(2)}%</span></p></div>; })}</div>
+        <div className="grid border-t border-slate-200 sm:grid-cols-2">{summary.map(({ portfolio, start: starting, end: ending, drawdown, invested, purchases }) => { const ret = starting ? ((ending - starting) / starting) * 100 : 0; return <div key={portfolio.id} className="border-b border-slate-100 p-5 last:border-b-0 sm:border-b-0 sm:[&:nth-child(even)]:border-l sm:p-6"><div className="mb-3 flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full" style={{ background: portfolio.color }}/><span className="text-sm font-semibold text-slate-800">{portfolio.name}</span></div><div className="flex items-end justify-between gap-3"><div><p className="text-2xl font-bold tabular-nums text-slate-900">{dollars(ending)}</p><p className="mt-1 text-xs text-slate-400">Ending value</p></div><span title={highInvesting.enabled ? "Gain on total invested" : undefined} className={`text-sm font-bold tabular-nums ${ret >= 0 ? "text-[#17724a]" : "text-rose-600"}`}>{ret >= 0 ? "+" : ""}{ret.toFixed(1)}%</span></div><p title="Starting balance plus additional deposits, excluding market gains" className="mt-3 text-xs text-slate-500">Book value <span className="font-semibold tabular-nums">{dollars(invested)}</span> across {purchases} purchases</p><p className="mt-3 text-xs text-slate-500">Max drawdown <span className="font-semibold tabular-nums text-rose-600">{drawdown.toFixed(2)}%</span></p></div>; })}</div>
+        <BacktestReturnsTable performance={performance} portfolios={displayPortfolios}/>
+        {highInvesting.enabled && <BacktestInvestmentsTable annual={annualInvestments} portfolios={displayPortfolios}/>}
         {[...new Set([...portfolioWarnings, ...simulationWarnings])].map(warning => <p key={warning} className="border-t border-amber-100 bg-amber-50 px-5 py-3 text-xs text-amber-800">{warning}</p>)}
         <div className="border-t border-slate-100 bg-slate-50 px-5 py-3 text-xs text-slate-500">Historical performance is illustrative and does not guarantee future results. Prices are adjusted close data from Yahoo Finance.</div>
       </section>
@@ -293,7 +322,7 @@ function portfolioDrawdown(results: Result[], id: string) {
   }
   return worst;
 }
-function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio[], flows: CashFlow[], start: string, end: string): Result[] {
+function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio[], flows: CashFlow[], start: string, end: string, highInvesting?: HighInvesting): Result[] {
   if (!priceHistory?.length) return [];
   const effectiveStart = start || priceHistory[0].date;
   const effectiveEnd = end || new Date().toLocaleDateString("sv-SE", { timeZone: "America/New_York" });
@@ -303,7 +332,10 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
 
   const contributions = new Map<string, number>();
   const percentageFactors = new Map<string, number>();
-  const addContribution = (date: string, amount: number, percent = false, cutoff?: string) => {
+  const deposits = new Map<string, number>();
+  const depositPurchases = new Map<string, number>();
+  const percentageFlows = new Map<string, number[]>();
+  const addContribution = (date: string, amount: number, percent = false, cutoff?: string, initial = false) => {
     let low = 0;
     let high = priceHistory.length;
     while (low < high) {
@@ -313,16 +345,26 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
     }
     const row = priceHistory[low];
     if (row && (!cutoff || row.date <= cutoff)) {
-      if (percent) percentageFactors.set(row.date, (percentageFactors.get(row.date) ?? 1) * Math.max(0, 1 + amount / 100));
-      else contributions.set(row.date, (contributions.get(row.date) ?? 0) + amount);
+      if (percent) {
+        percentageFactors.set(row.date, (percentageFactors.get(row.date) ?? 1) * Math.max(0, 1 + amount / 100));
+        const scheduled = percentageFlows.get(row.date) ?? [];
+        scheduled.push(amount);
+        percentageFlows.set(row.date, scheduled);
+      } else {
+        contributions.set(row.date, (contributions.get(row.date) ?? 0) + amount);
+        if (amount > 0) {
+          deposits.set(row.date, (deposits.get(row.date) ?? 0) + amount);
+          if (!initial) depositPurchases.set(row.date, (depositPurchases.get(row.date) ?? 0) + 1);
+        }
+      }
     }
   };
   const lastDate = priceHistory.at(-1)!.date;
-  for (const flow of flows) {
+  for (const flow of highInvesting?.enabled ? flows.filter(flow => flow.type === "initial") : flows) {
     const amount = Number(flow.amount);
     if (!Number.isFinite(amount) || amount === 0) continue;
     if (flow.type === "initial") {
-      addContribution(effectiveStart, amount);
+      addContribution(effectiveStart, amount, false, undefined, true);
       continue;
     }
     if (flow.type !== "recurring") {
@@ -345,12 +387,19 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
   }
 
   const values: Record<string, number> = Object.fromEntries(portfolios.map(portfolio => [portfolio.id, 0]));
+  // Each signal starts at the first invested date, independently of pre-start peaks and deposits.
+  const signalNav = Object.fromEntries(portfolios.map(portfolio => [portfolio.id, 1]));
+  const signalPeaks = Object.fromEntries(portfolios.map(portfolio => [portfolio.id, 0]));
+  const highAmount = highInvesting?.enabled && Number.isFinite(highInvesting.amount) && highInvesting.amount >= 0 ? highInvesting.amount : 0;
   const rows: Result[] = [];
   for (let index = 0; index < priceHistory.length; index += 1) {
     const current = priceHistory[index];
     const previous = priceHistory[index - 1];
     const contribution = contributions.get(current.date) ?? 0;
     const appliedContributions: Record<string, number> = {};
+    const athPurchases: Record<string, number> = {};
+    const investedContributions: Record<string, number> = {};
+    const investmentPurchases: Record<string, number> = {};
     for (const portfolio of portfolios) {
       const holdings = portfolio.holdings.filter(holding => symbols.has(holding.symbol.trim().toUpperCase()) && Number(holding.weight) > 0);
       const weightTotal = holdings.reduce((sum, holding) => sum + Number(holding.weight), 0);
@@ -363,10 +412,32 @@ function calculateResults(priceHistory: PriceRow[] | null, portfolios: Portfolio
           }, 0)
         : 0;
       const beforeFlow = values[portfolio.id] * (1 + dailyReturn);
-      values[portfolio.id] = Math.max(0, beforeFlow + contribution) * (percentageFactors.get(current.date) ?? 1);
+      let highContribution = 0;
+      if (highInvesting?.enabled && current.date >= effectiveStart && current.date <= effectiveEnd) {
+        if (signalPeaks[portfolio.id] > 0) signalNav[portfolio.id] *= 1 + dailyReturn;
+        const nav = signalNav[portfolio.id];
+        const peak = signalPeaks[portfolio.id];
+        const newHigh = nav > peak * (1 + 1e-12);
+        signalPeaks[portfolio.id] = Math.max(peak, nav);
+        if (newHigh && weightTotal > 0) highContribution = highAmount;
+      }
+      values[portfolio.id] = Math.max(0, beforeFlow + contribution + highContribution) * (percentageFactors.get(current.date) ?? 1);
       appliedContributions[portfolio.id] = values[portfolio.id] - beforeFlow;
+      athPurchases[portfolio.id] = highContribution > 0 ? 1 : 0;
+      investedContributions[portfolio.id] = (deposits.get(current.date) ?? 0) + highContribution;
+      investmentPurchases[portfolio.id] = (depositPurchases.get(current.date) ?? 0) + athPurchases[portfolio.id];
+      // Keep gross deposits separate from net cash flows, including same-day withdrawals.
+      let percentageBalance = Math.max(0, beforeFlow + contribution + highContribution);
+      for (const percent of percentageFlows.get(current.date) ?? []) {
+        const deposit = percentageBalance * percent / 100;
+        if (deposit > 0) {
+          investedContributions[portfolio.id] += deposit;
+          investmentPurchases[portfolio.id] += 1;
+        }
+        percentageBalance *= Math.max(0, 1 + percent / 100);
+      }
     }
-    if (current.date >= effectiveStart && current.date <= effectiveEnd) rows.push({ date: current.date, values: { ...values }, contributions: contribution, appliedContributions });
+    if (current.date >= effectiveStart && current.date <= effectiveEnd) rows.push({ date: current.date, values: { ...values }, contributions: contribution, appliedContributions, athPurchases, investedContributions, investmentPurchases });
     if (current.date > effectiveEnd) break;
   }
   return rows;
@@ -390,7 +461,7 @@ function resultsForRange(results: Result[], range: ChartRange) {
   const from = results.findIndex(row => row.date >= key);
   return results.slice(Math.max(0, from - 1));
 }
-function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: PriceRow[], results: Result[], portfolios: Portfolio[], flows: CashFlow[], start: string, end: string, range: "1D" | "5D"): Result[] {
+function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: PriceRow[], results: Result[], portfolios: Portfolio[], flows: CashFlow[], start: string, end: string, range: "1D" | "5D", highInvesting?: HighInvesting): Result[] {
   if (!priceHistory?.length || !intraday.length || !results.length) return [];
   const effectiveStart = start || priceHistory[0].date;
   const effectiveEnd = end || new Date().toLocaleDateString("sv-SE", { timeZone: "America/New_York" });
@@ -407,7 +478,8 @@ function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: Pric
     if (!dailyByDate.has(day)) missing.set(day, { ...row, date: day });
   }
   const daily = missing.size ? [...priceHistory, ...missing.values()].sort((a, b) => a.date.localeCompare(b.date)) : priceHistory;
-  const dailyResults = missing.size ? calculateResults(daily, portfolios, flows, start, end) : results;
+  // An unfinished live session cannot yet establish a new closing high.
+  const dailyResults = missing.size && !highInvesting?.enabled ? calculateResults(daily, portfolios, flows, start, end) : results;
   const rows: Result[] = [];
   for (const session of sessions) {
     const sessionRows = selected.filter(row => row.date.startsWith(session));
@@ -430,7 +502,7 @@ function intradayResultsForRange(priceHistory: PriceRow[] | null, intraday: Pric
           const current = row.prices[symbol];
           return sum + (base > 0 && current >= 0 && total > 0 ? (current / base - 1) * h.weight / total : 0);
         }, 0);
-        const cashFlow = sessionResult?.appliedContributions?.[portfolio.id] ?? contribution;
+        const cashFlow = highInvesting?.enabled && index !== sessionRows.length - 1 ? contribution : sessionResult?.appliedContributions?.[portfolio.id] ?? contribution;
         return [portfolio.id, Math.max(0, (previousResult?.values[portfolio.id] ?? 0) * (1 + change) + cashFlow)];
       }));
       rows.push({ date: row.date, values, contributions: index === 0 ? contribution : 0 });
